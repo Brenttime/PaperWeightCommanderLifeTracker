@@ -132,6 +132,21 @@
             background-color: #777;
         }
         
+        /* Partner toggle button styling */
+        .partner-toggle {
+            background-color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .partner
+        {
+            margin-top: 10px;
+        }
+
+        .partner-toggle.active {
+            background-color: #FF9800;
+        }
+        
         /* New poison counter container */
         .poison-counter-container {
             display: flex;
@@ -417,10 +432,25 @@
             border-radius: 5px; 
             cursor: pointer; 
         }
+        
+        /* Partner commander boxes styling */
+        .commander-damage-box.partner {
+            height: 30px;
+            font-size: 0.8em;
+            margin-bottom: 2px;
+        }
+        
         .damage-1 { background-color: #db4437; }
         .damage-3 { background-color: #4285f4; }
         .damage-2 { background-color: #48ad4b; }
         .damage-0 { background-color: #f4b400; }
+        
+        /* Partner commander colors (darker versions) */
+        .damage-1.partner { background-color: #a73529; }
+        .damage-3.partner { background-color: #3367d6; }
+        .damage-2.partner { background-color: #388e3c; }
+        .damage-0.partner { background-color: #e59700; }
+        
         .player0 .commander-damage-container { 
             left: 5%; 
             top: 50%; 
@@ -567,170 +597,212 @@
     </style>
 </head>
 <body>
-<div class="grid-container" id="gridContainer">
-    <!-- Player 1 Container (top-left) -->
-    <div class="player-container top-left" id="container0">
-        <div class="settings-panel top-left">
-            <div class="setting-btn" onclick="resetPlayerLife(0)">Reset Life</div>
-            <div class="setting-btn" id="toggleDeadBtn0" onclick="togglePlayerDead(0)">Mark Dead</div>
-            <div class="setting-btn" onclick="resetCommanderDamage(0)">Reset Cmd DMG</div>
-            
-            <!-- New Poison Counter Control -->
-            <div class="poison-counter-container">
-                <div class="poison-arrow" onclick="adjustPoisonCounter(0, -1)">−</div>
-                <div class="poison-display">
-                    <div class="poison-value" id="poison-value-0">0</div>
-                    <div class="poison-symbol">☠</div>
+    <div class="grid-container" id="gridContainer">
+        <!-- Player 1 Container (top-left) -->
+        <div class="player-container top-left" id="container0">
+            <div class="settings-panel top-left">
+                <div class="setting-btn" onclick="resetPlayerLife(0)">Reset Life</div>
+                <div class="setting-btn" id="toggleDeadBtn0" onclick="togglePlayerDead(0)">Mark Dead</div>
+                <div class="setting-btn" onclick="resetCommanderDamage(0)">Reset Cmd DMG</div>
+                <div class="setting-btn partner-toggle" id="partnerToggle0" onclick="togglePartnerMode(0)">Partner Mode: OFF</div>
+                
+                <!-- New Poison Counter Control -->
+                <div class="poison-counter-container">
+                    <div class="poison-arrow" onclick="adjustPoisonCounter(0, -1)">−</div>
+                    <div class="poison-display">
+                        <div class="poison-value" id="poison-value-0">0</div>
+                        <div class="poison-symbol">☠</div>
+                    </div>
+                    <div class="poison-arrow" onclick="adjustPoisonCounter(0, 1)">+</div>
                 </div>
-                <div class="poison-arrow" onclick="adjustPoisonCounter(0, 1)">+</div>
             </div>
-        </div>
-        <div class="player player0" id="player0">
-            <div class="arrow-indicator">⚙️</div>
-            <div class="command-damage disabled damage-0">Click To Return</div>
-            <div class="life-total" id="life0">40</div>
-            <div class="skull" id="skull0">☠️</div>
-            <div class="poison-indicator" id="poison-indicator-0">0 ☠</div>
-            <div class="half top-half" onclick="tapLife(0, -1, this)">
-                <div class="minus">-</div>
-                <div class="tap-counter" id="tapCounter0Minus">-1</div>
-            </div>
-            <div class="half bottom-half" onclick="tapLife(0, 1, this)">
-                <div class="plus">+</div>
-                <div class="tap-counter" id="tapCounter0Plus">+1</div>
-            </div>
-            <div class="commander-damage-container" id="commander-damage-container0">
-                <div class="commander-damage-box damage-1" onclick="adjustCommanderDamage(0, 1)">0</div>
-                <div class="commander-damage-box damage-2" onclick="adjustCommanderDamage(0, 2)">0</div>
-                <div class="commander-damage-box damage-3" onclick="adjustCommanderDamage(0, 3)">0</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Player 2 Container (top-right) -->
-    <div class="player-container top-right" id="container1">
-        <div class="settings-panel top-right">
-            <div class="setting-btn" onclick="resetPlayerLife(1)">Reset Life</div>
-            <div class="setting-btn" id="toggleDeadBtn1" onclick="togglePlayerDead(1)">Mark Dead</div>
-            <div class="setting-btn" onclick="resetCommanderDamage(1)">Reset Cmd DMG</div>
-            
-            <!-- New Poison Counter Control -->
-            <div class="poison-counter-container">
-                <div class="poison-arrow" onclick="adjustPoisonCounter(1, -1)">−</div>
-                <div class="poison-display">
-                    <div class="poison-value" id="poison-value-1">0</div>
-                    <div class="poison-symbol">☠</div>
+            <div class="player player0" id="player0">
+                <div class="arrow-indicator">⚙️</div>
+                <div class="command-damage disabled damage-0">▶️</div>
+                <div class="life-total" id="life0">40</div>
+                <div class="skull" id="skull0">☠️</div>
+                <div class="poison-indicator" id="poison-indicator-0">0 ☠</div>
+                <div class="half top-half" onclick="tapLife(0, -1, this)">
+                    <div class="minus">-</div>
+                    <div class="tap-counter" id="tapCounter0Minus">-1</div>
                 </div>
-                <div class="poison-arrow" onclick="adjustPoisonCounter(1, 1)">+</div>
-            </div>
-        </div>
-        <div class="player player1" id="player1">
-            <div class="arrow-indicator">⚙️</div>
-            <div class="command-damage disabled damage-1">Click To Return</div>
-            <div class="life-total" id="life1">40</div>
-            <div class="skull" id="skull1">☠️</div>
-            <div class="poison-indicator" id="poison-indicator-1">0 ☠</div>
-            <div class="half top-half" onclick="tapLife(1, 1, this)">+
-                <div class="tap-counter" id="tapCounter1Plus">+1</div>
-            </div>
-            <div class="half bottom-half" onclick="tapLife(1, -1, this)">
-                <div class="minus">-</div>
-                <div class="tap-counter" id="tapCounter1Minus">-1</div>
-            </div>
-            <div class="commander-damage-container" id="commander-damage-container1">
-                <div class="commander-damage-box damage-0" onclick="adjustCommanderDamage(1, 0)">0</div>
-                <div class="commander-damage-box damage-2" onclick="adjustCommanderDamage(1, 2)">0</div>
-                <div class="commander-damage-box damage-3" onclick="adjustCommanderDamage(1, 3)">0</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Player 3 Container (bottom-left) -->
-    <div class="player-container bottom-left" id="container2">
-        <div class="settings-panel bottom-left">
-            <div class="setting-btn" onclick="resetPlayerLife(2)">Reset Life</div>
-            <div class="setting-btn" id="toggleDeadBtn2" onclick="togglePlayerDead(2)">Mark Dead</div>
-            <div class="setting-btn" onclick="resetCommanderDamage(2)">Reset Cmd DMG</div>
-            
-            <!-- New Poison Counter Control -->
-            <div class="poison-counter-container">
-                <div class="poison-arrow" onclick="adjustPoisonCounter(2, -1)">−</div>
-                <div class="poison-display">
-                    <div class="poison-value" id="poison-value-2">0</div>
-                    <div class="poison-symbol">☠</div>
+                <div class="half bottom-half" onclick="tapLife(0, 1, this)">
+                    <div class="plus">+</div>
+                    <div class="tap-counter" id="tapCounter0Plus">+1</div>
                 </div>
-                <div class="poison-arrow" onclick="adjustPoisonCounter(2, 1)">+</div>
-            </div>
-        </div>
-        <div class="player player2" id="player2">
-            <div class="arrow-indicator">⚙️</div>
-            <div class="command-damage disabled damage-2">Click To Return</div>
-            <div class="life-total" id="life2">40</div>
-            <div class="skull" id="skull2">☠️</div>
-            <div class="poison-indicator" id="poison-indicator-2">0 ☠</div>
-            <div class="half top-half" onclick="tapLife(2, -1, this)">
-                <div class="minus">-</div>
-                <div class="tap-counter" id="tapCounter2Minus">-1</div>
-            </div>
-            <div class="half bottom-half" onclick="tapLife(2, 1, this)">+
-                <div class="tap-counter" id="tapCounter2Plus">+1</div>
-            </div>
-            <div class="commander-damage-container" id="commander-damage-container2">
-                <div class="commander-damage-box damage-0" onclick="adjustCommanderDamage(2, 0)">0</div>
-                <div class="commander-damage-box damage-1" onclick="adjustCommanderDamage(2, 1)">0</div>
-                <div class="commander-damage-box damage-3" onclick="adjustCommanderDamage(2, 3)">0</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Player 4 Container (bottom-right) -->
-    <div class="player-container bottom-right" id="container3">
-        <div class="settings-panel bottom-right">
-            <div class="setting-btn" onclick="resetPlayerLife(3)">Reset Life</div>
-            <div class="setting-btn" id="toggleDeadBtn3" onclick="togglePlayerDead(3)">Mark Dead</div>
-            <div class="setting-btn" onclick="resetCommanderDamage(3)">Reset Cmd DMG</div>
-            
-            <!-- New Poison Counter Control -->
-            <div class="poison-counter-container">
-                <div class="poison-arrow" onclick="adjustPoisonCounter(3, -1)">−</div>
-                <div class="poison-display">
-                    <div class="poison-value" id="poison-value-3">0</div>
-                    <div class="poison-symbol">☠</div>
+                <div class="commander-damage-container" id="commander-damage-container0">
+                    <div>
+                        <div class="commander-damage-box damage-1" onclick="adjustCommanderDamage(0, 1)">0</div>
+                        <div class="commander-damage-box damage-1 partner" onclick="adjustCommanderDamage(0, 1)" style="display: none;">0</div>
+                    </div>
+                    <div>
+                        <div class="commander-damage-box damage-2" onclick="adjustCommanderDamage(0, 2)">0</div>
+                        <div class="commander-damage-box damage-2 partner" onclick="adjustCommanderDamage(0, 2)" style="display: none;">0</div>
+                    </div>
+                    <div>
+                        <div class="commander-damage-box damage-3" onclick="adjustCommanderDamage(0, 3)">0</div>
+                        <div class="commander-damage-box damage-3 partner" onclick="adjustCommanderDamage(0, 3)" style="display: none;">0</div>
+                    </div>
                 </div>
-                <div class="poison-arrow" onclick="adjustPoisonCounter(3, 1)">+</div>
             </div>
         </div>
-        <div class="player player3" id="player3">
-            <div class="arrow-indicator">⚙️</div>
-            <div class="command-damage disabled damage-3">Click To Return</div>
-            <div class="life-total" id="life3">40</div>
-            <div class="skull" id="skull3">☠️</div>
-            <div class="poison-indicator" id="poison-indicator-3">0 ☠</div>
-            <div class="half top-half" onclick="tapLife(3, 1, this)">+
-                <div class="tap-counter" id="tapCounter3Plus">+1</div>
+        
+        <!-- Player 2 Container (top-right) -->
+        <div class="player-container top-right" id="container1">
+            <div class="settings-panel top-right">
+                <div class="setting-btn" onclick="resetPlayerLife(1)">Reset Life</div>
+                <div class="setting-btn" id="toggleDeadBtn1" onclick="togglePlayerDead(1)">Mark Dead</div>
+                <div class="setting-btn" onclick="resetCommanderDamage(1)">Reset Cmd DMG</div>
+                <div class="setting-btn partner-toggle" id="partnerToggle1" onclick="togglePartnerMode(1)">Partner Mode: OFF</div>
+                
+                <!-- New Poison Counter Control -->
+                <div class="poison-counter-container">
+                    <div class="poison-arrow" onclick="adjustPoisonCounter(1, -1)">−</div>
+                    <div class="poison-display">
+                        <div class="poison-value" id="poison-value-1">0</div>
+                        <div class="poison-symbol">☠</div>
+                    </div>
+                    <div class="poison-arrow" onclick="adjustPoisonCounter(1, 1)">+</div>
+                </div>
             </div>
-            <div class="half bottom-half" onclick="tapLife(3, -1, this)">
-                <div class="minus">-</div>
-                <div class="tap-counter" id="tapCounter3Minus">-1</div>
-            </div>
-            <div class="commander-damage-container" id="commander-damage-container3">
-                <div class="commander-damage-box damage-0" onclick="adjustCommanderDamage(3, 0)">0</div>
-                <div class="commander-damage-box damage-1" onclick="adjustCommanderDamage(3, 1)">0</div>
-                <div class="commander-damage-box damage-2" onclick="adjustCommanderDamage(3, 2)">0</div>
+            <div class="player player1" id="player1">
+                <div class="arrow-indicator">⚙️</div>
+                <div class="command-damage disabled damage-1">▶️</div>
+                <div class="life-total" id="life1">40</div>
+                <div class="skull" id="skull1">☠️</div>
+                <div class="poison-indicator" id="poison-indicator-1">0 ☠</div>
+                <div class="half top-half" onclick="tapLife(1, 1, this)">+
+                    <div class="tap-counter" id="tapCounter1Plus">+1</div>
+                </div>
+                <div class="half bottom-half" onclick="tapLife(1, -1, this)">
+                    <div class="minus">-</div>
+                    <div class="tap-counter" id="tapCounter1Minus">-1</div>
+                </div>
+                <div class="commander-damage-container" id="commander-damage-container1">
+                    <div>
+                        <div class="commander-damage-box damage-0" onclick="adjustCommanderDamage(1, 0)">0</div>
+                        <div class="commander-damage-box damage-0 partner" onclick="adjustCommanderDamage(1, 0)" style="display: none;">0</div>
+                    </div>
+                    <div>
+                        <div class="commander-damage-box damage-2" onclick="adjustCommanderDamage(1, 2)">0</div>
+                        <div class="commander-damage-box damage-2 partner" onclick="adjustCommanderDamage(1, 2)" style="display: none;">0</div>
+                    </div>
+                    <div>
+                        <div class="commander-damage-box damage-3" onclick="adjustCommanderDamage(1, 3)">0</div>
+                        <div class="commander-damage-box damage-3 partner" onclick="adjustCommanderDamage(1, 3)" style="display: none;">0</div>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <!-- Player 3 Container (bottom-left) -->
+        <div class="player-container bottom-left" id="container2">
+            <div class="settings-panel bottom-left">
+                <div class="setting-btn" onclick="resetPlayerLife(2)">Reset Life</div>
+                <div class="setting-btn" id="toggleDeadBtn2" onclick="togglePlayerDead(2)">Mark Dead</div>
+                <div class="setting-btn" onclick="resetCommanderDamage(2)">Reset Cmd DMG</div>
+                <div class="setting-btn partner-toggle" id="partnerToggle2" onclick="togglePartnerMode(2)">Partner Mode: OFF</div>
+                
+                <!-- New Poison Counter Control -->
+                <div class="poison-counter-container">
+                    <div class="poison-arrow" onclick="adjustPoisonCounter(2, -1)">−</div>
+                    <div class="poison-display">
+                        <div class="poison-value" id="poison-value-2">0</div>
+                        <div class="poison-symbol">☠</div>
+                    </div>
+                    <div class="poison-arrow" onclick="adjustPoisonCounter(2, 1)">+</div>
+                </div>
+            </div>
+            <div class="player player2" id="player2">
+                <div class="arrow-indicator">⚙️</div>
+                <div class="command-damage disabled damage-2">▶️</div>
+                <div class="life-total" id="life2">40</div>
+                <div class="skull" id="skull2">☠️</div>
+                <div class="poison-indicator" id="poison-indicator-2">0 ☠</div>
+                <div class="half top-half" onclick="tapLife(2, -1, this)">
+                    <div class="minus">-</div>
+                    <div class="tap-counter" id="tapCounter2Minus">-1</div>
+                </div>
+                <div class="half bottom-half" onclick="tapLife(2, 1, this)">+
+                    <div class="tap-counter" id="tapCounter2Plus">+1</div>
+                </div>
+                <div class="commander-damage-container" id="commander-damage-container2">
+                    <div>
+                        <div class="commander-damage-box damage-0" onclick="adjustCommanderDamage(2, 0)">0</div>
+                        <div class="commander-damage-box damage-0 partner" onclick="adjustCommanderDamage(2, 0)" style="display: none;">0</div>
+                    </div>
+                    <div>
+                        <div class="commander-damage-box damage-1" onclick="adjustCommanderDamage(2, 1)">0</div>
+                        <div class="commander-damage-box damage-1 partner" onclick="adjustCommanderDamage(2, 1)" style="display: none;">0</div>
+                    </div>
+                    <div>
+                        <div class="commander-damage-box damage-3" onclick="adjustCommanderDamage(2, 3)">0</div>
+                        <div class="commander-damage-box damage-3 partner" onclick="adjustCommanderDamage(2, 3)" style="display: none;">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Player 4 Container (bottom-right) -->
+        <div class="player-container bottom-right" id="container3">
+            <div class="settings-panel bottom-right">
+                <div class="setting-btn" onclick="resetPlayerLife(3)">Reset Life</div>
+                <div class="setting-btn" id="toggleDeadBtn3" onclick="togglePlayerDead(3)">Mark Dead</div>
+                <div class="setting-btn" onclick="resetCommanderDamage(3)">Reset Cmd DMG</div>
+                <div class="setting-btn partner-toggle" id="partnerToggle3" onclick="togglePartnerMode(3)">Partner Mode: OFF</div>
+                
+                <!-- New Poison Counter Control -->
+                <div class="poison-counter-container">
+                    <div class="poison-arrow" onclick="adjustPoisonCounter(3, -1)">−</div>
+                    <div class="poison-display">
+                        <div class="poison-value" id="poison-value-3">0</div>
+                        <div class="poison-symbol">☠</div>
+                    </div>
+                    <div class="poison-arrow" onclick="adjustPoisonCounter(3, 1)">+</div>
+                </div>
+            </div>
+            <div class="player player3" id="player3">
+                <div class="arrow-indicator">⚙️</div>
+                <div class="command-damage disabled damage-3">▶️</div>
+                <div class="life-total" id="life3">40</div>
+                <div class="skull" id="skull3">☠️</div>
+                <div class="poison-indicator" id="poison-indicator-3">0 ☠</div>
+                <div class="half top-half" onclick="tapLife(3, 1, this)">+
+                    <div class="tap-counter" id="tapCounter3Plus">+1</div>
+                </div>
+                <div class="half bottom-half" onclick="tapLife(3, -1, this)">
+                    <div class="minus">-</div>
+                    <div class="tap-counter" id="tapCounter3Minus">-1</div>
+                </div>
+                <div class="commander-damage-container" id="commander-damage-container3">
+                    <div>
+                        <div class="commander-damage-box damage-0" onclick="adjustCommanderDamage(3, 0)">0</div>
+                        <div class="commander-damage-box damage-0 partner" onclick="adjustCommanderDamage(3, 0)" style="display: none;">0</div>
+                    </div>
+                    <div>
+                        <div class="commander-damage-box damage-1" onclick="adjustCommanderDamage(3, 1)">0</div>
+                        <div class="commander-damage-box damage-1 partner" onclick="adjustCommanderDamage(3, 1)" style="display: none;">0</div>
+                    </div>
+                    <div>
+                        <div class="commander-damage-box damage-2" onclick="adjustCommanderDamage(3, 2)">0</div>
+                        <div class="commander-damage-box damage-2 partner" onclick="adjustCommanderDamage(3, 2)" style="display: none;">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="radial-menu" id="radialMenu">
+            <div class="menu-button" onclick="toggleMenu()">Menu</div>
+            <div class="menu-option restart" onclick="restartGame()">RESTART</div>
+        </div>
     </div>
-    
-    <div class="radial-menu" id="radialMenu">
-        <div class="menu-button" onclick="toggleMenu()">Menu</div>
-        <div class="menu-option restart" onclick="restartGame()">RESTART</div>
-    </div>
-</div>
 <script>
     var playerLives = [40, 40, 40, 40];
     var commanderDamages = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]; // Array to track commander damage for each player against others
+    var partnerCommanderDamages = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]; // Array to track partner commander damage
     var playersDead = [false, false, false, false]; // Track player death status
     var poisonCounters = [0, 0, 0, 0]; // New: Track poison counters for each player
+    var partnerMode = [false, false, false, false]; // Track which players have partner commanders
     var tapCounts = { plus: [0, 0, 0, 0], minus: [0, 0, 0, 0] };
     var tapTimeouts = { plus: [null, null, null, null], minus: [null, null, null, null] };
     var inCommanderDamageMode = false; // Track if any player is in commander damage mode
@@ -747,7 +819,63 @@
             setupTouchEvents(i);
             updatePoisonIndicator(i); // Initialize poison indicators
         }
+        // Initialize partner box visibility
+        updateAllPartnerBoxVisibility();
     };
+
+    function togglePartnerMode(player) {
+        partnerMode[player] = !partnerMode[player];
+        var toggleBtn = document.getElementById("partnerToggle" + player);
+        
+        if (partnerMode[player]) {
+            toggleBtn.textContent = "Partner Mode: ON";
+            addClass(toggleBtn, "active");
+        } else {
+            toggleBtn.textContent = "Partner Mode: OFF";
+            removeClass(toggleBtn, "active");
+            
+            // Reset partner commander damage FROM this player to all other players
+            for (var i = 0; i < 4; i++) {
+                if (i !== player) {
+                    var dmgIdx = (player < i) ? player : player - 1;
+                    partnerCommanderDamages[i][dmgIdx] = 0;
+                    
+                    // Reset the partner damage box on other players' boards
+                    var partnerBox = document.querySelector("#player" + i + " .commander-damage-box.damage-" + player + ".partner");
+                    if (partnerBox) {
+                        partnerBox.textContent = "0";
+                    }
+                    
+                    // Check if those players should be revived
+                    checkPlayerStatus(i);
+                }
+            }
+        }
+        
+        // Update all other players' commander damage displays to show/hide partner boxes FROM this player
+        updateAllPartnerBoxVisibility();
+        
+        // Close the panel
+        togglePlayerPanel(player);
+    }
+    
+    function updateAllPartnerBoxVisibility() {
+        // For each player, show/hide partner damage boxes based on other players' partner mode
+        for (var targetPlayer = 0; targetPlayer < 4; targetPlayer++) {
+            for (var sourcePlayer = 0; sourcePlayer < 4; sourcePlayer++) {
+                if (sourcePlayer !== targetPlayer) {
+                    var partnerBox = document.querySelector("#player" + targetPlayer + " .commander-damage-box.damage-" + sourcePlayer + ".partner");
+                    if (partnerBox) {
+                        if (partnerMode[sourcePlayer]) {
+                            partnerBox.style.display = "flex";
+                        } else {
+                            partnerBox.style.display = "none";
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     function togglePlayerPanel(playerIndex) {
         var containerElement = document.getElementById("container" + playerIndex);
@@ -854,7 +982,8 @@
                 // Check commander damage
                 for (var i = 0; i < 3; i++) {
                     var damage = commanderDamages[player][i];
-                    if (damage >= 21) {
+                    var partnerDamage = partnerCommanderDamages[player][i];
+                    if (damage >= 21 || partnerDamage >= 21) {
                         shouldStayDead = true;
                         break;
                     }
@@ -921,16 +1050,19 @@
         // Reset all commander damage dealt TO this player
         for (var i = 0; i < 3; i++) {
             commanderDamages[player][i] = 0;
-            console.log(commanderDamages[player]);
+            partnerCommanderDamages[player][i] = 0;
         }
         
         // Reset all commander damage boxes showing damage TO this player
         for (var i = 0; i < 4; i++) {
             if (i !== player) {
-                var boxIndex = (i < player) ? i : i - 1;
-                var box = document.querySelector("#player" + player + " .commander-damage-box.damage-" + i);
-                if (box) {
-                    box.textContent = "0";
+                var mainBox = document.querySelector("#player" + player + " .commander-damage-box.damage-" + i + ":not(.partner)");
+                var partnerBox = document.querySelector("#player" + player + " .commander-damage-box.damage-" + i + ".partner");
+                if (mainBox) {
+                    mainBox.textContent = "0";
+                }
+                if (partnerBox) {
+                    partnerBox.textContent = "0";
                 }
             }
         }
@@ -972,12 +1104,17 @@
                 
                 // Check each opponent's commander damage
                 for (var i = 0; i < 3; i++) {
-                    var damageIndex = (i < player) ? i : i + 1;
                     var damage = commanderDamages[player][i];
-                    if (damage >= 21) {
+                    var partnerDamage = partnerCommanderDamages[player][i];
+                    if (damage >= 21 || partnerDamage >= 21) {
                         shouldStayDead = true;
                         break;
                     }
+                }
+                
+                // Check poison counters
+                if (poisonCounters[player] >= 10) {
+                    shouldStayDead = true;
                 }
                 
                 if (!shouldStayDead) {
@@ -989,74 +1126,57 @@
             var totalCmdDamage = parseInt(commandDamage.textContent);
             totalCmdDamage += change;
             var cmdDamagePlayerLife = document.querySelector(".player.active-cmd-damage-div");
-            var cmdDamagePlayerNumber = cmdDamagePlayerLife.id[cmdDamagePlayerLife.id.length - 1];
+            var cmdDamagePlayerNumber = parseInt(cmdDamagePlayerLife.id[cmdDamagePlayerLife.id.length - 1]);
             
             // Update the commander damage for tracking
-            var targetPlayer = parseInt(cmdDamagePlayerNumber);
             var fromPlayer = player;
-            var dmgIdx = (fromPlayer < targetPlayer) ? fromPlayer : fromPlayer - 1;
-            commanderDamages[targetPlayer][dmgIdx] = totalCmdDamage;
+            var targetPlayer = cmdDamagePlayerNumber;
             
-            playerLives[cmdDamagePlayerNumber] += (change * -1);
-            document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
+            // Extract the target player from the command damage class
+            var commandDamageClasses = commandDamage.className.split(' ');
+            var toPlayer = -1;
+            for (var i = 0; i < commandDamageClasses.length; i++) {
+                if (commandDamageClasses[i].indexOf('damage-') === 0) {
+                    toPlayer = parseInt(commandDamageClasses[i].replace('damage-', ''));
+                    break;
+                }
+            }
+            
+            // Use the target player for damage tracking (who is receiving the damage)
+            var dmgIdx = (fromPlayer < targetPlayer) ? fromPlayer : fromPlayer - 1;
+            
+            // Determine if this is a partner commander based on the active damage class
+            var isPartnerCommander = hasClass(commandDamage, "partner");
+            
+            if (isPartnerCommander) {
+                partnerCommanderDamages[targetPlayer][dmgIdx] = totalCmdDamage;
+            } else {
+                commanderDamages[targetPlayer][dmgIdx] = totalCmdDamage;
+            }
+            
+            playerLives[targetPlayer] += (change * -1);
+            document.getElementById("life" + targetPlayer).textContent = playerLives[targetPlayer];
             commandDamage.textContent = totalCmdDamage;
             
             // Update boxes with current damage values
-            var boxes = cmdDamagePlayerLife.querySelectorAll(".commander-damage-box");
-            for (var i = 0; i < boxes.length; i++) {
-                var box = boxes[i];
-                var damageClass = getDamageClass(box);
-                var damageCounter = document.querySelector(".command-damage." + damageClass);
-                box.textContent = parseInt(damageCounter.textContent) || 0;
-            }
+            updateCommanderDamageBoxes(targetPlayer);
             
             // Check if player died from commander damage (21+)
-            if (totalCmdDamage >= 21 && !playersDead[cmdDamagePlayerNumber]) {
-                killPlayer(cmdDamagePlayerNumber);
+            if (totalCmdDamage >= 21 && !playersDead[targetPlayer]) {
+                killPlayer(targetPlayer);
             } 
             // Check if player should be revived now that commander damage is below 21
-            else if (totalCmdDamage < 21 && playersDead[cmdDamagePlayerNumber]) {
-                // Check if they should stay dead from life total or other commander damage
-                var shouldStayDead = playerLives[cmdDamagePlayerNumber] <= 0;
-                
-                if (!shouldStayDead) {
-                    // Check other commander damages
-                    for (var i = 0; i < 3; i++) {
-                        if (i === dmgIdx) continue; // Skip the one we just changed
-                        
-                        var damage = commanderDamages[cmdDamagePlayerNumber][i];
-                        if (damage >= 21) {
-                            shouldStayDead = true;
-                            break;
-                        }
-                    }
-                }
-                
-                if (!shouldStayDead) {
-                    revivePlayer(cmdDamagePlayerNumber);
-                }
+            else if (totalCmdDamage < 21 && playersDead[targetPlayer]) {
+                checkPlayerStatus(targetPlayer);
             }
             
             // Check if player died from life loss
-            if (playerLives[cmdDamagePlayerNumber] <= 0 && !playersDead[cmdDamagePlayerNumber]) {
-                killPlayer(cmdDamagePlayerNumber);
+            if (playerLives[targetPlayer] <= 0 && !playersDead[targetPlayer]) {
+                killPlayer(targetPlayer);
             }
             // Similar check for revival if life is positive and no commander damage is fatal
-            else if (playerLives[cmdDamagePlayerNumber] > 0 && playersDead[cmdDamagePlayerNumber]) {
-                var shouldStayDead = false;
-                
-                // Check each opponent's commander damage
-                for (var i = 0; i < 3; i++) {
-                    var damage = commanderDamages[cmdDamagePlayerNumber][i];
-                    if (damage >= 21) {
-                        shouldStayDead = true;
-                        break;
-                    }
-                }
-                
-                if (!shouldStayDead) {
-                    revivePlayer(cmdDamagePlayerNumber);
-                }
+            else if (playerLives[targetPlayer] > 0 && playersDead[targetPlayer]) {
+                checkPlayerStatus(targetPlayer);
             }
         }
         
@@ -1072,6 +1192,23 @@
             tapCounts[tapType][player] = 0;
             removeClass(counterElement, "show");
         }, 2000);
+    }
+    
+    function updateCommanderDamageBoxes(targetPlayer) {
+        for (var i = 0; i < 4; i++) {
+            if (i !== targetPlayer) {
+                var dmgIdx = (i < targetPlayer) ? i : i - 1;
+                var mainBox = document.querySelector("#player" + targetPlayer + " .commander-damage-box.damage-" + i + ":not(.partner)");
+                var partnerBox = document.querySelector("#player" + targetPlayer + " .commander-damage-box.damage-" + i + ".partner");
+                
+                if (mainBox) {
+                    mainBox.textContent = commanderDamages[targetPlayer][dmgIdx];
+                }
+                if (partnerBox) {
+                    partnerBox.textContent = partnerCommanderDamages[targetPlayer][dmgIdx];
+                }
+            }
+        }
     }
     
     function killPlayer(player) {
@@ -1106,17 +1243,23 @@
     
     function checkPlayerStatus(player) {
         // This function checks if a player should be dead or alive based on their
-        // current life total and commander damage values
+        // current life total, commander damage values, and poison counters
         var shouldBeDead = false;
         
         // Check life total
         if (playerLives[player] <= 0) {
             shouldBeDead = true;
-        } else {
-            // Check all commander damages to this player
+        } 
+        // Check poison counters
+        else if (poisonCounters[player] >= 10) {
+            shouldBeDead = true;
+        } 
+        else {
+            // Check all commander damages to this player (both main and partner)
             for (var i = 0; i < 3; i++) {
                 var damage = commanderDamages[player][i];
-                if (damage >= 21) {
+                var partnerDamage = partnerCommanderDamages[player][i];
+                if (damage >= 21 || partnerDamage >= 21) {
                     shouldBeDead = true;
                     break;
                 }
@@ -1159,7 +1302,7 @@
         setTimeout(function() {
             currentPlayer.setAttribute("onclick", "enableDiv(this)");
         }, 200);
-        
+
         var commanderDamageBox = document.querySelectorAll("#player" + fromPlayer + " .commander-damage-box");
         for (var i = 0; i < commanderDamageBox.length; i++) {
             var box = commanderDamageBox[i];
@@ -1184,10 +1327,10 @@
             }
         }
         
-		var arrows = document.querySelectorAll(".arrow-indicator");
-		for (var i = 0; i < arrows.length; i++) {
-    		arrows[i].style.display = "none";
-		}
+        var arrows = document.querySelectorAll(".arrow-indicator");
+        for (var i = 0; i < arrows.length; i++) {
+            arrows[i].style.display = "none";
+        }
     }
     
     function toggleMenu() {
@@ -1216,7 +1359,7 @@
             var damageClass = getDamageClass(box);
             var damageCounter = document.querySelector(".command-damage." + damageClass);
             box.textContent = parseInt(damageCounter.textContent) || 0;
-            damageCounter.textContent = "Click To Return";
+            damageCounter.textContent = "▶️";
         }
         
         var lifeTotal = currentPlayer.querySelector(".life-total");
@@ -1236,12 +1379,11 @@
             removeClass(container, "hidden-container");
         }
         
-
-		var arrows = document.querySelectorAll(".arrow-indicator");
-		for (var i = 0; i < arrows.length; i++) {
-			arrows[i].style.display = "block";
-		}
-				
+        var arrows = document.querySelectorAll(".arrow-indicator");
+        for (var i = 0; i < arrows.length; i++) {
+            arrows[i].style.display = "block";
+        }
+                
         // Check if player status should change after updating commander damage
         for (var i = 0; i < 4; i++) {
             checkPlayerStatus(i);
@@ -1284,138 +1426,6 @@
         }
         return '';
     }
-        
-    function tapLife(player, change, divElement) {
-        // If a panel is open, close it first
-        if (activePlayerPanel !== -1) {
-            togglePlayerPanel(activePlayerPanel);
-            return;
-        }
-        
-        var isPlus = change > 0;
-        var halfClass = divElement.classList.contains("top-half") ? "top-half" : "bottom-half";
-        var counterId = isPlus ? "tapCounter" + player + "Plus" : "tapCounter" + player + "Minus";
-        var counterElement = document.getElementById(counterId);
-        var halfElement = document.querySelector("#player" + player + " ." + halfClass);
-        var tapType = isPlus ? "plus" : "minus";
-        var playerLife = document.querySelector("#player" + player).querySelector(".life-total");
-        
-        if(!hasClass(playerLife, "disabled")) {
-            playerLives[player] += change;
-            document.getElementById("life" + player).textContent = playerLives[player];
-            
-            // Check if player died from life loss
-            if (playerLives[player] <= 0 && !playersDead[player]) {
-                killPlayer(player);
-            } 
-            // Check if player should be revived from positive life
-            else if (playerLives[player] > 0 && playersDead[player]) {
-                // Check if they should stay dead from commander damage
-                var shouldStayDead = false;
-                
-                // Check each opponent's commander damage
-                for (var i = 0; i < 3; i++) {
-                    var damageIndex = (i < player) ? i : i + 1;
-                    var damage = commanderDamages[player][i];
-                    if (damage >= 21) {
-                        shouldStayDead = true;
-                        break;
-                    }
-                }
-                
-                if (!shouldStayDead) {
-                    revivePlayer(player);
-                }
-            }
-        } else {
-            var commandDamage = document.querySelector("#player" + player).querySelector(".command-damage");
-            var totalCmdDamage = parseInt(commandDamage.textContent);
-            totalCmdDamage += change;
-            var cmdDamagePlayerLife = document.querySelector(".player.active-cmd-damage-div");
-            var cmdDamagePlayerNumber = cmdDamagePlayerLife.id[cmdDamagePlayerLife.id.length - 1];
-            
-            // Update the commander damage for tracking
-            var targetPlayer = parseInt(cmdDamagePlayerNumber);
-            var fromPlayer = player;
-            var dmgIdx = (fromPlayer < targetPlayer) ? fromPlayer : fromPlayer - 1;
-            commanderDamages[targetPlayer][dmgIdx] = totalCmdDamage;
-            
-            playerLives[cmdDamagePlayerNumber] += (change * -1);
-            document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
-            commandDamage.textContent = totalCmdDamage;
-            
-            // Update boxes with current damage values
-            var boxes = cmdDamagePlayerLife.querySelectorAll(".commander-damage-box");
-            for (var i = 0; i < boxes.length; i++) {
-                var box = boxes[i];
-                var damageClass = getDamageClass(box);
-                var damageCounter = document.querySelector(".command-damage." + damageClass);
-                box.textContent = parseInt(damageCounter.textContent) || 0;
-            }
-            
-            // Check if player died from commander damage (21+)
-            if (totalCmdDamage >= 21 && !playersDead[cmdDamagePlayerNumber]) {
-                killPlayer(cmdDamagePlayerNumber);
-            } 
-            // Check if player should be revived now that commander damage is below 21
-            else if (totalCmdDamage < 21 && playersDead[cmdDamagePlayerNumber]) {
-                // Check if they should stay dead from life total or other commander damage
-                var shouldStayDead = playerLives[cmdDamagePlayerNumber] <= 0;
-                
-                if (!shouldStayDead) {
-                    // Check other commander damages
-                    for (var i = 0; i < 3; i++) {
-                        if (i === dmgIdx) continue; // Skip the one we just changed
-                        
-                        var damage = commanderDamages[cmdDamagePlayerNumber][i];
-                        if (damage >= 21) {
-                            shouldStayDead = true;
-                            break;
-                        }
-                    }
-                }
-                
-                if (!shouldStayDead) {
-                    revivePlayer(cmdDamagePlayerNumber);
-                }
-            }
-            
-            // Check if player died from life loss
-            if (playerLives[cmdDamagePlayerNumber] <= 0 && !playersDead[cmdDamagePlayerNumber]) {
-                killPlayer(cmdDamagePlayerNumber);
-            }
-            // Similar check for revival if life is positive and no commander damage is fatal
-            else if (playerLives[cmdDamagePlayerNumber] > 0 && playersDead[cmdDamagePlayerNumber]) {
-                var shouldStayDead = false;
-                
-                // Check each opponent's commander damage
-                for (var i = 0; i < 3; i++) {
-                    var damage = commanderDamages[cmdDamagePlayerNumber][i];
-                    if (damage >= 21) {
-                        shouldStayDead = true;
-                        break;
-                    }
-                }
-                
-                if (!shouldStayDead) {
-                    revivePlayer(cmdDamagePlayerNumber);
-                }
-            }
-        }
-        
-        tapCounts[tapType][player] += change;
-        counterElement.textContent = (isPlus ? "+" : "") + tapCounts[tapType][player];
-        addClass(counterElement, "show");
-        
-        addClass(halfElement, "dimmed");
-        setTimeout(function() { removeClass(halfElement, "dimmed"); }, 200);
-        
-        clearTimeout(tapTimeouts[tapType][player]);
-        tapTimeouts[tapType][player] = setTimeout(function() {
-            tapCounts[tapType][player] = 0;
-            removeClass(counterElement, "show");
-        }, 2000);
-    }
 
     function restartGame() { 
         // Reset player lives
@@ -1426,8 +1436,9 @@
             resetPoisonCounter(i);
         }
         
-        // Reset commander damages
+        // Reset commander damages (both main and partner)
         commanderDamages = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
+        partnerCommanderDamages = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
         var commanderDamageBoxes = document.querySelectorAll(".commander-damage-box");
         for (var i = 0; i < commanderDamageBoxes.length; i++) {
             commanderDamageBoxes[i].textContent = "0";
@@ -1435,6 +1446,13 @@
         
         // Reset player death status
         playersDead = [false, false, false, false];
+        
+        // Reset partner mode
+        for (var i = 0; i < 4; i++) {
+            if (partnerMode[i]) {
+                togglePartnerMode(i);
+            }
+        }
         
         // Reset commander damage mode
         inCommanderDamageMode = false;
@@ -1450,10 +1468,10 @@
             removeClass(container, "hidden-container");
         }
         
-		var arrows = document.querySelectorAll(".arrow-indicator");
-		for (var i = 0; i < arrows.length; i++) {
-    		arrows[i].style.display = "block";
-		}
+        var arrows = document.querySelectorAll(".arrow-indicator");
+        for (var i = 0; i < arrows.length; i++) {
+            arrows[i].style.display = "block";
+        }
         
         // Close menu
         removeClass(document.getElementById("radialMenu"), "menu-open");
