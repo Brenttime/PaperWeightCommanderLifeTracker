@@ -1096,6 +1096,7 @@
                 removeClass(toggleBtn, "active");
 
                 // Show basic commander buttons when partner mode is off
+                var playerElement = document.getElementById("player" + player);
                 var basicCommanderButtons = playerElement.querySelectorAll(".basic-commander");
                 for (var i = 0; i < basicCommanderButtons.length; i++) {
                     basicCommanderButtons[i].style.removeProperty('display');
@@ -1106,6 +1107,12 @@
                     if (i !== player) {
                         var dmgIdx = (player < i) ? player : player - 1;
                         partnerCommanderDamages[i][dmgIdx] = 0;
+                        
+                        // Reset the partner damage box text to 0
+                        var partnerBox = document.querySelector("#player" + i + " .commander-damage-box.damage-" + player + ".partner");
+                        if (partnerBox) {
+                            partnerBox.textContent = "0";
+                        }
                     }
                 }
             }
@@ -1402,9 +1409,32 @@
             log(`Partner damage taken from player ${player} by Partner ${partnerNumber} with change of ${change} to player ${cmdDamagePlayerNumber}`);
         
             // Update the commander damage for tracking
+            var targetPlayer = parseInt(cmdDamagePlayerNumber);
+            var fromPlayer = player;
+            var dmgIdx = (fromPlayer < targetPlayer) ? fromPlayer : fromPlayer - 1;
+            partnerCommanderDamages[targetPlayer][dmgIdx] = currentActivePartnerDamageTotal;
+
             playerLives[cmdDamagePlayerNumber] += (change * -1);
             document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
             document.querySelector(`#player${cmdDamagePlayerNumber} .enemy-partner-${partnerNumber}`).textContent = currentActivePartnerDamageTotal;
+
+            // Check if player died from partner commander damage (21+)
+            if (currentActivePartnerDamageTotal >= 21 && !playersDead[cmdDamagePlayerNumber]) {
+                killPlayer(cmdDamagePlayerNumber);
+            }
+            // Check if player should be revived now that partner commander damage is below 21
+            else if (currentActivePartnerDamageTotal < 21 && playersDead[cmdDamagePlayerNumber]) {
+                checkPlayerStatus(cmdDamagePlayerNumber);
+            }
+
+            // Check if player died from life loss
+            if (playerLives[cmdDamagePlayerNumber] <= 0 && !playersDead[cmdDamagePlayerNumber]) {
+                killPlayer(cmdDamagePlayerNumber);
+            }
+            // Check if player should be revived from positive life
+            else if (playerLives[cmdDamagePlayerNumber] > 0 && playersDead[cmdDamagePlayerNumber]) {
+                checkPlayerStatus(cmdDamagePlayerNumber);
+            }
 
             // Add partner damage dimmed effect for small counters
             var isPlus = change > 0;
@@ -1843,7 +1873,7 @@
         }
 
         function getDamageClass(element) {
-            getClass(element, 'damage-');
+            return getClass(element, 'damage-');
         }
 
         function getClass(element, classPrefix)
