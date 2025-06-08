@@ -17,7 +17,8 @@
                 height: 100%;
                 width: 100%;
                 font-family: Arial, sans-serif;
-                background-color: #313030;
+                background-color: #0d1117;
+                color: #f0f6fc;
                 overflow: hidden;
                 margin: 0;
                 padding: 0;
@@ -132,18 +133,19 @@
 
             /* Individual setting buttons */
             .setting-btn {
-                background-color: #555;
-                color: white;
+                background-color: #21262d;
+                color: #f0f6fc;
                 padding: 10px 15px;
                 border-radius: 5px;
                 cursor: pointer;
                 text-align: center;
                 min-width: 160px;
                 margin-bottom: 15px;
+                border: 1px solid #30363d;
             }
 
             .setting-btn:hover {
-                background-color: #777;
+                background-color: #30363d;
             }
 
             /* Partner toggle button styling */
@@ -156,14 +158,16 @@
             }
 
             .partner-toggle.active {
-                background-color: #4CAF50;
+                background-color: #238636;
+                border: 1px solid #2ea043;
             }
 
             /* New poison counter container */
             .poison-counter-container {
                 display: flex;
                 align-items: center;
-                background-color: #555;
+                background-color: #21262d;
+                border: 1px solid #30363d;
                 border-radius: 5px;
                 padding: 5px 10px;
                 min-width: 160px;
@@ -172,7 +176,7 @@
 
             /* Poison counter arrows */
             .poison-arrow {
-                color: white;
+                color: #f0f6fc;
                 cursor: pointer;
                 font-size: 18px;
                 padding: 5px;
@@ -181,13 +185,13 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background-color: rgba(0, 0, 0, 0.2);
+                background-color: #161b22;
                 border-radius: 50%;
                 transition: background-color 0.2s;
             }
 
             .poison-arrow:hover {
-                background-color: rgba(0, 0, 0, 0.4);
+                background-color: #30363d;
             }
 
             /* Poison counter display */
@@ -207,8 +211,8 @@
 
             .poison-symbol {
                 font-size: 0.9em;
-                color: #8bc34a;
-                /* Poison green color */
+                color: #7c3aed;
+                /* Dark mode poison purple */
             }
 
             /* Poison indicator on main screen */
@@ -218,8 +222,8 @@
                 font-weight: bold;
                 display: flex;
                 align-items: center;
-                color: #85f900fc;
-                /* Poison green */
+                color: #a855f7;
+                /* Dark mode poison purple */
                 opacity: 0;
                 transition: opacity 0.3s;
             }
@@ -255,7 +259,7 @@
             /* Arrow indicators for sliding */
             .arrow-indicator {
                 position: absolute;
-                color: white;
+                color: #8b949e;
                 font-size: 24px;
                 z-index: 15;
                 opacity: 0.7;
@@ -303,21 +307,21 @@
                 transform: translateX(80%);
             }
 
-            /* Player colors */
+            /* Player colors - Deep dark mode palette */
             .player0 {
-                background-color: #f4b400;
+                background-color: #da3633;
             }
 
             .player1 {
-                background-color: #db4437;
+                background-color: #238636;
             }
 
             .player2 {
-                background-color: #48ad4b;
+                background-color: #1f6feb;
             }
 
             .player3 {
-                background-color: #4285f4;
+                background-color: #fb8500;
             }
 
             .command-damage {
@@ -384,7 +388,7 @@
                 -webkit-align-items: center;
                 align-items: center;
                 font-size: 3em;
-                color: rgb(94, 93, 93);
+                color: black;
                 font-weight: bold;
                 cursor: pointer;
                 -webkit-transition: background-color 0.2s;
@@ -494,36 +498,36 @@
             }
 
             .damage-1 {
-                background-color: #db4437;
+                background-color: #238636;
             }
 
             .damage-3 {
-                background-color: #4285f4;
+                background-color: #fb8500;
             }
 
             .damage-2 {
-                background-color: #48ad4b;
+                background-color: #1f6feb;
             }
 
             .damage-0 {
-                background-color: #f4b400;
+                background-color: #da3633;
             }
 
             /* Partner commander colors (darker versions) */
             .damage-1.partner {
-                background-color: #a73529;
+                background-color: #1a6629;
             }
 
             .damage-3.partner {
-                background-color: #3367d6;
+                background-color: #d16a00;
             }
 
             .damage-2.partner {
-                background-color: #388e3c;
+                background-color: #1958c7;
             }
 
             .damage-0.partner {
-                background-color: #e59700;
+                background-color: #b12b29;
             }
 
             .player0 .commander-damage-container {
@@ -575,8 +579,9 @@
 
             .menu-button {
                 font-size: 2em;
-                background-color: #333;
-                color: white;
+                background-color: #21262d;
+                color: #f0f6fc;
+                border: 1px solid #30363d;
                 border-radius: 50%;
                 padding: 20px;
                 cursor: pointer;
@@ -595,15 +600,16 @@
             }
 
             .menu-button:hover {
-                background-color: #444;
+                background-color: #30363d;
             }
 
             .menu-option {
                 position: absolute;
                 width: 120px;
                 height: 35px;
-                background-color: #333;
-                color: white;
+                background-color: #21262d;
+                color: #f0f6fc;
+                border: 1px solid #30363d;
                 border-radius: 10px;
                 display: -webkit-box;
                 display: -webkit-flex;
@@ -749,6 +755,7 @@
                 position: absolute;
                 font-size: 2em;
                 font-weight: bold;
+                color: black;
             }
 
             .partner-damage .minus {
@@ -878,7 +885,8 @@
                     <div class="life-total" id="life1">40</div>
                     <div class="skull" id="skull1">☠️</div>
                     <div class="poison-indicator" id="poison-indicator-1">0 ☠</div>
-                    <div class="half top-half basic-commander" onclick="tapLife(1, 1, this)">+
+                    <div class="half top-half basic-commander" onclick="tapLife(1, 1, this)">
+                        <div class="plus">+</div>
                         <div class="tap-counter" id="tapCounter1Plus">+1</div>
                     </div>
                     <div class="half bottom-half basic-commander" onclick="tapLife(1, -1, this)">
@@ -935,24 +943,25 @@
                         <div class="minus">-</div>
                         <div class="tap-counter" id="tapCounter2Minus">-1</div>
                     </div>
-                    <div class="half bottom-half basic-commander" onclick="tapLife(2, 1, this)">+
+                    <div class="half bottom-half basic-commander" onclick="tapLife(2, 1, this)">
+                        <div class="plus">+</div>
                         <div class="tap-counter" id="tapCounter2Plus">+1</div>
                     </div>
 
                     <div class="commander-damage-container" id="commander-damage-container2">
                         <div>
-                            <div class="commander-damage-box damage-0" onclick="adjustCommanderDamage(2)">0</div>
-                            <div class="commander-damage-box damage-0 partner" onclick="adjustCommanderDamage(2)"
+                            <div class="commander-damage-box damage-0 enemy-partner-0" onclick="adjustCommanderDamage(2)">0</div>
+                            <div class="commander-damage-box damage-0 partner enemy-partner-1" onclick="adjustCommanderDamage(2)"
                                 style="display: none;">0</div>
                         </div>
                         <div>
-                            <div class="commander-damage-box damage-1" onclick="adjustCommanderDamage(2)">0</div>
-                            <div class="commander-damage-box damage-1 partner" onclick="adjustCommanderDamage(2)"
+                            <div class="commander-damage-box damage-1 enemy-partner-0" onclick="adjustCommanderDamage(2)">0</div>
+                            <div class="commander-damage-box damage-1 partner enemy-partner-1" onclick="adjustCommanderDamage(2)"
                                 style="display: none;">0</div>
                         </div>
                         <div>
-                            <div class="commander-damage-box damage-3" onclick="adjustCommanderDamage(2)">0</div>
-                            <div class="commander-damage-box damage-3 partner" onclick="adjustCommanderDamage(2)"
+                            <div class="commander-damage-box damage-3 enemy-partner-0" onclick="adjustCommanderDamage(2)">0</div>
+                            <div class="commander-damage-box damage-3 partner enemy-partner-1" onclick="adjustCommanderDamage(2)"
                                 style="display: none;">0</div>
                         </div>
                     </div>
@@ -984,7 +993,8 @@
                     <div class="life-total" id="life3">40</div>
                     <div class="skull" id="skull3">☠️</div>
                     <div class="poison-indicator" id="poison-indicator-3">0 ☠</div>
-                    <div class="half top-half basic-commander" onclick="tapLife(3, 1, this)">+
+                    <div class="half top-half basic-commander" onclick="tapLife(3, 1, this)">
+                        <div class="plus">+</div>
                         <div class="tap-counter" id="tapCounter3Plus">+1</div>
                     </div>
                     <div class="half bottom-half basic-commander" onclick="tapLife(3, -1, this)">
@@ -994,18 +1004,18 @@
 
                     <div class="commander-damage-container" id="commander-damage-container3">
                         <div>
-                            <div class="commander-damage-box damage-0" onclick="adjustCommanderDamage(3)">0</div>
-                            <div class="commander-damage-box damage-0 partner" onclick="adjustCommanderDamage(3)"
+                            <div class="commander-damage-box damage-0 enemy-partner-0" onclick="adjustCommanderDamage(3)">0</div>
+                            <div class="commander-damage-box damage-0 partner enemy-partner-1" onclick="adjustCommanderDamage(3)"
                                 style="display: none;">0</div>
                         </div>
                         <div>
-                            <div class="commander-damage-box damage-1" onclick="adjustCommanderDamage(3)">0</div>
-                            <div class="commander-damage-box damage-1 partner" onclick="adjustCommanderDamage(3)"
+                            <div class="commander-damage-box damage-1 enemy-partner-0" onclick="adjustCommanderDamage(3)">0</div>
+                            <div class="commander-damage-box damage-1 partner enemy-partner-1" onclick="adjustCommanderDamage(3)"
                                 style="display: none;">0</div>
                         </div>
                         <div>
-                            <div class="commander-damage-box damage-2" onclick="adjustCommanderDamage(3)">0</div>
-                            <div class="commander-damage-box damage-2 partner" onclick="adjustCommanderDamage(3)"
+                            <div class="commander-damage-box damage-2 enemy-partner-0" onclick="adjustCommanderDamage(3)">0</div>
+                            <div class="commander-damage-box damage-2 partner enemy-partner-1" onclick="adjustCommanderDamage(3)"
                                 style="display: none;">0</div>
                         </div>
                     </div>
@@ -1055,6 +1065,8 @@
         };
 
         function AppendPartnerBoxes(player) {
+            log(`Appending partner boxes for player ${player}`);
+
             // Check if partner container already exists
             var playerElement = document.getElementById("player" + player);
             var existingPartnerContainer = playerElement.querySelector(".partner-split-container");
@@ -1071,6 +1083,8 @@
         }
 
         function RemovePartnerBoxes(player) {
+            log(`Removing partner boxes for player ${player}`);
+
             // Remove the partner container from the DOM
             var playerElement = document.getElementById("player" + player);
             var partnerContainer = playerElement.querySelector(".partner-split-container");
@@ -1136,35 +1150,38 @@
             var secondHalf = document.createElement('div');
             secondHalf.className = 'partner-half';
 
+            // Determine rotation based on player position
+            var rotation = (player === 1 || player === 3) ? 'rotate(-90deg)' : 'rotate(90deg)';
+
             // Create elements for first half
             var topHalf1 = document.createElement('div');
             topHalf1.className = 'partner-damage half Quarter-left top-half';
-            topHalf1.innerHTML = '<div style="transform: rotate(90deg);" class="minus">-</div><div style="transform: rotate(90deg);" class="tap-counter" id="tapCounter' + player + 'Minus">-1</div>';
+            topHalf1.innerHTML = '<div style="transform: ' + rotation + ';" class="minus">-</div><div style="transform: ' + rotation + ';" class="tap-counter" id="tapCounter' + player + 'Minus">-1</div>';
             topHalf1.onclick = function() { tapPartnerDamage(player, -1, this, 0) }; // Associated with Partner 0
             log(topHalf1);
 
             var middle1 = document.createElement('div');
             middle1.className = 'partner-damage half';
-            middle1.innerHTML = '<div class="regular-commander-damage partner-damage-0" style="transform: rotate(90deg);" >0</div>';
+            middle1.innerHTML = '<div class="regular-commander-damage partner-damage-0" style="transform: ' + rotation + ';" >0</div>';
 
             var bottomHalf1 = document.createElement('div');
             bottomHalf1.className = 'partner-damage half Quarter-left bottom-half';
-            bottomHalf1.innerHTML = '<div style="transform: rotate(90deg);" class="plus">+</div><div style="transform: rotate(90deg);" class="tap-counter" id="tapCounter' + player + 'Plus">+1</div>';
+            bottomHalf1.innerHTML = '<div style="transform: ' + rotation + ';" class="plus">+</div><div style="transform: ' + rotation + ';" class="tap-counter" id="tapCounter' + player + 'Plus">+1</div>';
             bottomHalf1.onclick = function() { tapPartnerDamage(player, 1, this, 0) }; // Associated with Partner 0
 
             // Create elements for second half
             var topHalf2 = document.createElement('div');
             topHalf2.className = 'partner-damage half Quarter-right top-half';
-            topHalf2.innerHTML = '<div class="minus">-</div><div style="transform: rotate(90deg);" class="tap-counter" id="tapCounter' + player + 'Minus">-1</div>';
+            topHalf2.innerHTML = '<div style="transform: ' + rotation + ';" class="minus">-</div><div style="transform: ' + rotation + ';" class="tap-counter" id="tapCounter' + player + 'Minus">-1</div>';
             topHalf2.onclick = function() { tapPartnerDamage(player, -1, this, 1) }; // Associated with Partner 1
 
             var middle2 = document.createElement('div');
             middle2.className = 'partner-damage half';
-            middle2.innerHTML = '<div style="transform: rotate(90deg);" class="partner-damage partner-damage-1">0</div>';
+            middle2.innerHTML = '<div style="transform: ' + rotation + ';" class="partner-damage partner-damage-1">0</div>';
 
             var bottomHalf2 = document.createElement('div');
             bottomHalf2.className = 'partner-damage half Quarter-right bottom-half';
-            bottomHalf2.innerHTML = '<div style="transform: rotate(90deg);" class="plus">+</div><div style="transform: rotate(90deg);" class="tap-counter" id="tapCounter' + player + 'Plus">+1</div>';
+            bottomHalf2.innerHTML = '<div style="transform: ' + rotation + ';" class="plus">+</div><div style="transform: ' + rotation + ';" class="tap-counter" id="tapCounter' + player + 'Plus">+1</div>';
             bottomHalf2.onclick = function() { tapPartnerDamage(player, 1, this, 1) }; // Associated with Partner 1
 
             // Assemble the structure
@@ -1689,13 +1706,14 @@
 
             var currentPlayer = document.querySelector(".player.player" + activePlayer);
             addClass(currentPlayer, "active-cmd-damage-div");
+            addClass(currentPlayer.querySelector(".command-damage"), "active-cmd-damage-div");
+
             var lifeTotal = currentPlayer.querySelector(".life-total");
             addClass(lifeTotal, "disabled");
-            var halfElements = currentPlayer.querySelectorAll(".half");
-            for (var i = 0; i < halfElements.length; i++) {
-                addClass(halfElements[i], "disabled");
-            }
 
+            var halfElements = currentPlayer.querySelectorAll(".half");
+            addClass(halfElements, "disabled");
+            
             setTimeout(function () {
                 currentPlayer.setAttribute("onclick", "enableDiv(this)");
             }, 200);
@@ -1731,30 +1749,34 @@
                 }
             });
 
-            for (var i = 0; i < numberOfPlayers; i++) {
-                var commanderDamageBox = document.querySelectorAll("#player" + activePlayer + " .commander-damage-box" + ".damage-" + i);
-                commanderDamageBox.forEach((box) => {
-                    
-                    var damageClass = getDamageClass(box);
-                    var opponent = damageClass.replace("damage-", "");
+            for (var i = 0; i < numberOfPlayers; i++) 
+            {
+                if(i !== activePlayer) 
+                {
+                    var commanderDamageBox = document.querySelectorAll("#player" + activePlayer + " .commander-damage-box" + ".damage-" + i);
+                    commanderDamageBox.forEach((box) => 
+                    {
+                        var damageClass = getDamageClass(box);
+                        var opponent = damageClass.replace("damage-", "");
 
-                    // Player has partner commanders
-                    if(partnerMode[opponent]) {
-                        AppendPartnerBoxes(opponent);
-                        log(`${box} ${getClass(box, 'enemy-partner-')}`)
-                        var partnerNumber = getClass(box, 'enemy-partner-').replace('enemy-partner-', '');
-                        log(`Active damage from ${opponent} using Second Partner commander to ${activePlayer} from partner: ${partnerNumber} Current Total: ${box.textContent}`);
-                        document.querySelector(`#player${opponent} .partner-damage-${partnerNumber}`).textContent = box.textContent;
-                    } 
-                    // Player only has 1 commander
-                    else if(!box.classList.contains("partner"))
-                    {                    
-                        log(`[No Partner Commanders] Active damage from ${opponent} to ${activePlayer}: ${box.textContent}`);
-                        var damageCounter = document.querySelector(".command-damage." + damageClass);
-                        damageCounter.textContent = parseInt(box.textContent);
-                        removeClass(damageCounter, "disabled");
-                    }
-                });
+                        // Player has partner commanders
+                        if(partnerMode[opponent]) {
+                            log(`${box} ${getClass(box, 'enemy-partner-')}`)
+                            AppendPartnerBoxes(opponent);
+                            var partnerNumber = getClass(box, 'enemy-partner-').replace('enemy-partner-', '');
+                            log(`Active damage from ${opponent} using Second Partner commander to ${activePlayer} from partner: ${partnerNumber} Current Total: ${box.textContent}`);
+                            document.querySelector(`#player${opponent} .partner-damage-${partnerNumber}`).textContent = box.textContent;
+                        } 
+                        // Player only has 1 commander
+                        else if(!box.classList.contains("partner"))
+                        {                    
+                            log(`[No Partner Commanders] Active damage from ${opponent} to ${activePlayer}: ${box.textContent}`);
+                            var damageCounter = document.querySelector(".command-damage." + damageClass);
+                            damageCounter.textContent = parseInt(box.textContent);
+                            removeClass(damageCounter, "disabled");
+                        }
+                    });
+                }
             }
         }
 
@@ -1806,6 +1828,7 @@
             document.querySelectorAll(".player").forEach((player) => {
                 player.querySelector(".command-damage").textContent = "▶️Click to Exit";
                 removeClass(player.querySelector(".life-total"), "disabled");
+                removeClass(player.querySelector(".command-damage"), "active-cmd-damage-div");
                 removeClass(player.querySelector(".commander-damage-container"), "hidden-container");
                 addClass(player.querySelector(".command-damage"), "disabled");
             });
@@ -1848,6 +1871,14 @@
         }
 
         function addClass(element, className) {
+            // Handle arrays, NodeLists, and other array-like objects
+            if (element.length !== undefined) {
+                for (let i = 0; i < element.length; i++) {
+                    addClass(element[i], className);
+                }
+                return;
+            }
+
             if (element.classList) {
                 element.classList.add(className);
             } else if (!hasClass(element, className)) {
@@ -1976,6 +2007,15 @@
 
         function log(message) {
             console.log(message);
+        }
+
+        function toggleMenu() {
+            var menu = document.getElementById("radialMenu");
+            if (hasClass(menu, "menu-open")) {
+                removeClass(menu, "menu-open");
+            } else {
+                addClass(menu, "menu-open");
+            }
         }
     </script>
 </html>
