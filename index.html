@@ -1521,6 +1521,7 @@
                 }
             }
             else {
+                log(`Player ${fromPlayer} has dealt commander damage to player ${player} with change of ${change}`);
                 var commandDamage = document.querySelector("#player" + player).querySelector(".command-damage");
                 var totalCmdDamage = parseInt(commandDamage.textContent);
                 totalCmdDamage += change;
@@ -1539,12 +1540,8 @@
 
                 // Update boxes with current damage values
                 var boxes = cmdDamagePlayerLife.querySelectorAll(".commander-damage-box");
-                for (var i = 0; i < boxes.length; i++) {
-                    var box = boxes[i];
-                    var damageClass = getDamageClass(box);
-                    var damageCounter = document.querySelector(".command-damage." + damageClass);
-                    box.textContent = parseInt(damageCounter.textContent) || 0;
-                }
+                document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
+                document.querySelector(`#player${cmdDamagePlayerNumber} .damage-${fromPlayer}`).textContent = totalCmdDamage;
 
                 // Check if player died from commander damage (21+)
                 if (totalCmdDamage >= 21 && !playersDead[cmdDamagePlayerNumber]) {
