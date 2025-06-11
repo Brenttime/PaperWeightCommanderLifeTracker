@@ -1033,7 +1033,7 @@
         var playerLives = [40, 40, 40, 40];
         var numberOfPlayers = playerLives.length;
         var commanderDamages = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]; // Array to track commander damage for each player against others
-        var partnerCommanderDamages = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]; // Array to track partner commander damage
+        var partnerCommanderDamages = [[[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]]]; // Array to track partner commander damage [targetPlayer][opponentIndex][partnerNumber]
         var playersDead = [false, false, false, false]; // Track player death status
         var poisonCounters = [0, 0, 0, 0]; // New: Track poison counters for each player
         var partnerMode = [false, false, false, false]; // Track which players have partner commanders
@@ -1309,31 +1309,8 @@
             document.getElementById("poison-value-" + player).textContent = poisonCounters[player];
             updatePoisonIndicator(player);
 
-            // Check if player reached 10 poison counters (game rule)
-            if (poisonCounters[player] >= 10 && !playersDead[player]) {
-                killPlayer(player);
-            }
-            // Check if player should be revived from poison reduction
-            else if (poisonCounters[player] < 10 && playersDead[player]) {
-                // Check if they should stay dead from other causes
-                var shouldStayDead = playerLives[player] <= 0;
-
-                if (!shouldStayDead) {
-                    // Check commander damage
-                    for (var i = 0; i < 3; i++) {
-                        var damage = commanderDamages[player][i];
-                        var partnerDamage = partnerCommanderDamages[player][i];
-                        if (damage >= 21 || partnerDamage >= 21) {
-                            shouldStayDead = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!shouldStayDead) {
-                    revivePlayer(player);
-                }
-            }
+            // Check player status after poison counter change
+            checkPlayerStatus(player);
         }
 
         // Function to update poison indicator visibility
@@ -1390,7 +1367,8 @@
             // Reset all commander damage dealt TO this player
             for (var i = 0; i < 3; i++) {
                 commanderDamages[player][i] = 0;
-                partnerCommanderDamages[player][i] = 0;
+                partnerCommanderDamages[player][i][0] = 0;
+                partnerCommanderDamages[player][i][1] = 0;
             }
 
             // Reset all commander damage boxes showing damage TO this player
@@ -1425,33 +1403,18 @@
             var cmdDamagePlayerNumber = cmdDamagePlayerLife.id[cmdDamagePlayerLife.id.length - 1];
             log(`Partner damage taken from player ${player} by Partner ${partnerNumber} with change of ${change} to player ${cmdDamagePlayerNumber}`);
         
-            // Update the commander damage for tracking
+            // Update the commander damage for tracking - FIX: Track each partner separately
             var targetPlayer = parseInt(cmdDamagePlayerNumber);
             var fromPlayer = player;
             var dmgIdx = (fromPlayer < targetPlayer) ? fromPlayer : fromPlayer - 1;
-            partnerCommanderDamages[targetPlayer][dmgIdx] = currentActivePartnerDamageTotal;
+            partnerCommanderDamages[targetPlayer][dmgIdx][partnerNumber] = currentActivePartnerDamageTotal;
 
             playerLives[cmdDamagePlayerNumber] += (change * -1);
             document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
             document.querySelector(`#player${cmdDamagePlayerNumber} .enemy-partner-${partnerNumber}`).textContent = currentActivePartnerDamageTotal;
 
-            // Check if player died from partner commander damage (21+)
-            if (currentActivePartnerDamageTotal >= 21 && !playersDead[cmdDamagePlayerNumber]) {
-                killPlayer(cmdDamagePlayerNumber);
-            }
-            // Check if player should be revived now that partner commander damage is below 21
-            else if (currentActivePartnerDamageTotal < 21 && playersDead[cmdDamagePlayerNumber]) {
-                checkPlayerStatus(cmdDamagePlayerNumber);
-            }
-
-            // Check if player died from life loss
-            if (playerLives[cmdDamagePlayerNumber] <= 0 && !playersDead[cmdDamagePlayerNumber]) {
-                killPlayer(cmdDamagePlayerNumber);
-            }
-            // Check if player should be revived from positive life
-            else if (playerLives[cmdDamagePlayerNumber] > 0 && playersDead[cmdDamagePlayerNumber]) {
-                checkPlayerStatus(cmdDamagePlayerNumber);
-            }
+            // Check player status after partner damage and life change
+            checkPlayerStatus(cmdDamagePlayerNumber);
 
             // Add partner damage dimmed effect for small counters
             var isPlus = change > 0;
@@ -1496,29 +1459,8 @@
                 playerLives[player] += change;
                 document.getElementById("life" + player).textContent = playerLives[player];
 
-                // Check if player died from life loss
-                if (playerLives[player] <= 0 && !playersDead[player]) {
-                    killPlayer(player);
-                }
-                // Check if player should be revived from positive life
-                else if (playerLives[player] > 0 && playersDead[player]) {
-                    // Check if they should stay dead from commander damage
-                    var shouldStayDead = false;
-
-                    // Check each opponent's commander damage
-                    for (var i = 0; i < 3; i++) {
-                        var damageIndex = (i < player) ? i : i + 1;
-                        var damage = commanderDamages[player][i];
-                        if (damage >= 21) {
-                            shouldStayDead = true;
-                            break;
-                        }
-                    }
-
-                    if (!shouldStayDead) {
-                        revivePlayer(player);
-                    }
-                }
+                // Check player status after life total change
+                checkPlayerStatus(player);
             }
             else {
                 log(`Player ${fromPlayer} has dealt commander damage to player ${player} with change of ${change}`);
@@ -1539,58 +1481,11 @@
                 commandDamage.textContent = totalCmdDamage;
 
                 // Update boxes with current damage values
-                var boxes = cmdDamagePlayerLife.querySelectorAll(".commander-damage-box");
                 document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
                 document.querySelector(`#player${cmdDamagePlayerNumber} .damage-${fromPlayer}`).textContent = totalCmdDamage;
 
-                // Check if player died from commander damage (21+)
-                if (totalCmdDamage >= 21 && !playersDead[cmdDamagePlayerNumber]) {
-                    killPlayer(cmdDamagePlayerNumber);
-                }
-                // Check if player should be revived now that commander damage is below 21
-                else if (totalCmdDamage < 21 && playersDead[cmdDamagePlayerNumber]) {
-                    // Check if they should stay dead from life total or other commander damage
-                    var shouldStayDead = playerLives[cmdDamagePlayerNumber] <= 0;
-
-                    if (!shouldStayDead) {
-                        // Check other commander damages
-                        for (var i = 0; i < 3; i++) {
-                            if (i === dmgIdx) continue; // Skip the one we just changed
-
-                            var damage = commanderDamages[cmdDamagePlayerNumber][i];
-                            if (damage >= 21) {
-                                shouldStayDead = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!shouldStayDead) {
-                        revivePlayer(cmdDamagePlayerNumber);
-                    }
-                }
-
-                // Check if player died from life loss
-                if (playerLives[cmdDamagePlayerNumber] <= 0 && !playersDead[cmdDamagePlayerNumber]) {
-                    killPlayer(cmdDamagePlayerNumber);
-                }
-                // Similar check for revival if life is positive and no commander damage is fatal
-                else if (playerLives[cmdDamagePlayerNumber] > 0 && playersDead[cmdDamagePlayerNumber]) {
-                    var shouldStayDead = false;
-
-                    // Check each opponent's commander damage
-                    for (var i = 0; i < 3; i++) {
-                        var damage = commanderDamages[cmdDamagePlayerNumber][i];
-                        if (damage >= 21) {
-                            shouldStayDead = true;
-                            break;
-                        }
-                    }
-
-                    if (!shouldStayDead) {
-                        revivePlayer(cmdDamagePlayerNumber);
-                    }
-                }
+                // Check player status after commander damage and life change
+                checkPlayerStatus(cmdDamagePlayerNumber);
             }
 
             tapCounts[tapType][player] += change;
@@ -1671,8 +1566,15 @@
                 // Check all commander damages to this player (both main and partner)
                 for (var i = 0; i < 3; i++) {
                     var damage = commanderDamages[player][i];
-                    var partnerDamage = partnerCommanderDamages[player][i];
-                    if (damage >= 21 || partnerDamage >= 21) {
+                    if (damage >= 21) {
+                        shouldBeDead = true;
+                        break;
+                    }
+                    
+                    // Check both partner commanders for this opponent
+                    var partnerDamage0 = partnerCommanderDamages[player][i][0];
+                    var partnerDamage1 = partnerCommanderDamages[player][i][1];
+                    if (partnerDamage0 >= 21 || partnerDamage1 >= 21) {
                         shouldBeDead = true;
                         break;
                     }
@@ -1774,39 +1676,6 @@
                         }
                     });
                 }
-            }
-        }
-
-        function checkPlayerStatus(player) {
-            // This function checks if a player should be dead or alive based on their
-            // current life total, commander damage values, and poison counters
-            var shouldBeDead = false;
-
-            // Check life total
-            if (playerLives[player] <= 0) {
-                shouldBeDead = true;
-            }
-            // Check poison counters
-            else if (poisonCounters[player] >= 10) {
-                shouldBeDead = true;
-            }
-            else {
-                // Check all commander damages to this player (both main and partner)
-                for (var i = 0; i < 3; i++) {
-                    var damage = commanderDamages[player][i];
-                    var partnerDamage = partnerCommanderDamages[player][i];
-                    if (damage >= 21 || partnerDamage >= 21) {
-                        shouldBeDead = true;
-                        break;
-                    }
-                }
-            }
-
-            // Update player state if needed
-            if (shouldBeDead && !playersDead[player]) {
-                killPlayer(player);
-            } else if (!shouldBeDead && playersDead[player]) {
-                revivePlayer(player);
             }
         }
 
@@ -1926,12 +1795,8 @@
 
             // Reset commander damages (both main and partner)
             commanderDamages = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
-            partnerCommanderDamages = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
-            var commanderDamageBoxes = document.querySelectorAll(".commander-damage-box");
-            for (var i = 0; i < commanderDamageBoxes.length; i++) {
-                commanderDamageBoxes[i].textContent = "0";
-            }
-
+            partnerCommanderDamages = [[[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]]];
+            
             // Reset player death status
             playersDead = [false, false, false, false];
 
