@@ -707,12 +707,17 @@
                 height: 100%;
                 position: absolute;
                 padding: 0;
+                /* iOS 9.3.5 fallback */
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                align-items: center;
+                top: 0;
             }
 
             .partner-half {
                 -webkit-box-flex: 0;
-                -webkit-flex: 0 1 40%;
-                flex: 0 1 40%;
+                -webkit-flex: 0 1 45%;
+                flex: 0 1 45%;
                 display: -webkit-box;
                 display: -webkit-flex;
                 display: flex;
@@ -727,15 +732,30 @@
                 -webkit-justify-content: center;
                 justify-content: center;
                 position: relative;
+                height: 100%;
+                /* Ensure consistent spacing */
+                margin: 0 2%;
             }
 
             .partner-damage {
                 position: relative !important;
-                width: 80%;
+                width: 90%;
                 height: 33.33%;
                 -webkit-transform-style: preserve-3d;
                 transform-style: preserve-3d;
                 text-align: center;
+                /* iOS 9.3.5 centering fallback */
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                align-items: center;
+                -webkit-box-pack: center;
+                -webkit-justify-content: center;
+                justify-content: center;
+                /* Better positioning for iOS 9.3.5 */
+                margin: 0 auto;
             }
 
             .Quarter-left {
@@ -751,46 +771,96 @@
             }
 
             .regular-commander-damage,
-            .partner-damage {
+            .partner-damage-0,
+            .partner-damage-1 {
                 position: absolute;
-                font-size: 2em;
+                font-size: 1.5em; /* Reduced from 2em */
                 font-weight: bold;
                 color: black;
+                /* iOS 9.3.5 centering with better positioning */
+                /*top: 40%; /* Moved up from 50% */
+                left: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+                margin: 0;
+                padding: 0;
+                line-height: 1;
+                text-align: center;
+                width: auto;
+                height: auto;
+                /* Ensure text stays centered */
+                white-space: nowrap;
+                top:auto;
+                left: auto;
+                right: auto;
+            }
+
+            .partner-damage-1.partner-damage {
+                top: 2%;
+                right: 5%;
+                left: 5%;
+            }
+
+            .partner-damage-0.regular-commander-damage {
+                top: 30%;
             }
 
             .partner-damage .minus {
                 position: absolute;
                 left: 50% !important;
-                top: 75% !important;
+                /*top: 75% !important;*/
+                -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);
+                margin: 0;
+                padding: 0;
+                font-size: 2em; /* Reduced from 3em */
             }
-
 
             .partner-damage .plus {
                 position: absolute;
                 left: 50% !important;
                 top: 25% !important;
+                /*-webkit-transform: translateX(-50%);
+                transform: translateX(-50%);*/
+                margin: 0;
+                padding: 0;
+                font-size: 2em; /* Reduced from 3em */
             }
 
             .partner-damage .tap-counter {
                 position: absolute;
                 left: 50%;
                 font-size: 0.8em;
+                -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);
+                margin: 0;
+                padding: 0;
+                color: black;
+                font-weight: bold;
+                opacity: 0;
+                -webkit-transition: opacity 0.2s;
+                transition: opacity 0.2s;
+                pointer-events: none;
+                line-height: 1;
+                text-align: center;
+                width: auto;
             }
 
-            .top-half .partner-damage .tap-counter {
-                top: 5%;
+            .partner-damage.top-half .tap-counter {
+                top: 8%; /* Moved up slightly */
             }
 
-            .bottom-half .partner-damage .tap-counter {
-                bottom: 5%;
+            .partner-damage.bottom-half .tap-counter {
+                bottom: 8%; /* Moved up slightly */
             }
 
-            /* iOS 9.3.5 specific fallbacks */
+            /* Enhanced iOS 9.3.5 specific fallbacks */
             @supports (-webkit-overflow-scrolling: touch) {
                 .partner-split-container {
                     display: -webkit-box;
                     -webkit-box-align: center;
                     -webkit-box-pack: center;
+                    top: 0;
                 }
 
                 .partner-half {
@@ -798,9 +868,55 @@
                     -webkit-box-orient: vertical;
                     -webkit-box-align: center;
                     -webkit-box-pack: center;
+                    width: 45%;
+                    margin: 0 2%;
+                }
+
+                .partner-damage {
+                    display: -webkit-box;
+                    -webkit-box-align: center;
+                    -webkit-box-pack: center;
+                    width: 90%;
+                    margin: 0 auto;
+                }
+
+                .regular-commander-damage,
+                .partner-damage-0,
+                .partner-damage-1 {
+                    position: absolute;
+                    left: 50%;
+                    -webkit-transform: translate(-50%, -50%);
+                    transform: translate(-50%, -50%);
+                    display: block;
+                    text-align: center;
+                    white-space: nowrap;
+                    font-size: 1.5em; /* Consistent reduced size */
                 }
             }
-            
+
+            /* Additional iOS 9.3.5 viewport fixes */
+            @media screen and (-webkit-min-device-pixel-ratio: 0) {
+                .partner-split-container {
+                    left: -5%;
+                    top: 0;
+                }
+                
+                .partner-damage {
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                    width: 90%;
+                    margin: 0 auto;
+                }
+                
+                .regular-commander-damage,
+                .partner-damage-0,
+                .partner-damage-1 {
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    white-space: nowrap;
+                    font-size: 1.5em; /* Consistent reduced size */
+                }
+            }
         </style>
     </head>
     <body>
@@ -1038,7 +1154,7 @@
         var poisonCounters = [0, 0, 0, 0]; // New: Track poison counters for each player
         var partnerMode = [false, false, false, false]; // Track which players have partner commanders
         var tapCounts = { plus: [0, 0, 0, 0], minus: [0, 0, 0, 0] };
-        partnerTapCounts = { plus: [[0, 0], [0, 0], [0, 0], [0, 0]], minus: [[0, 0], [0, 0], [0, 0], [0, 0]] };
+        var partnerTapCounts = { plus: [[0, 0], [0, 0], [0, 0], [0, 0]], minus: [[0, 0], [0, 0], [0, 0], [0, 0]] };
         var tapTimeouts = { plus: [null, null, null, null], minus: [null, null, null, null] };
         var partnerTapTimeouts = { plus: [[null,null], [null,null], [null,null], [null,null]], minus: [[null,null], [null,null], [null,null], [null,null]] };
         var inCommanderDamageMode = false; // Track if any player is in commander damage mode
@@ -1065,7 +1181,7 @@
         };
 
         function AppendPartnerBoxes(player) {
-            log(`Appending partner boxes for player ${player}`);
+            log("Appending partner boxes for player " + player);
 
             // Check if partner container already exists
             var playerElement = document.getElementById("player" + player);
@@ -1077,13 +1193,13 @@
                 playerElement.appendChild(partnerContainer);
             }
 
-            hideElements(document.querySelector(`#player${player} .minus`));
-            hideElements(document.querySelector(`#player${player} .plus`));
-            hideElements(document.querySelector(`#player${player} .half`));
+            hideElements(document.querySelector("#player" + player + " .minus"));
+            hideElements(document.querySelector("#player" + player + " .plus"));
+            hideElements(document.querySelector("#player" + player + " .half"));
         }
 
         function RemovePartnerBoxes(player) {
-            log(`Removing partner boxes for player ${player}`);
+            log("Removing partner boxes for player " + player);
 
             // Remove the partner container from the DOM
             var playerElement = document.getElementById("player" + player);
@@ -1092,9 +1208,9 @@
                 playerElement.removeChild(partnerContainer);
             }
 
-            showElements(document.querySelector(`#player${player} .minus`));
-            showElements(document.querySelector(`#player${player} .plus`));
-            showElements(document.querySelector(`#player${player} .half`));
+            showElements(document.querySelector("#player" + player + " .minus"));
+            showElements(document.querySelector("#player" + player + " .plus"));
+            showElements(document.querySelector("#player" + player + " .half"));
         }
 
         function togglePartnerMode(player) {
@@ -1620,7 +1736,7 @@
             var commandDamageText = currentPlayer.querySelector(".command-damage");
             removeClass(commandDamageText, "disabled");
 
-            // Disable life change on active playuer
+            // Disable life change on active player
             for (var i = 0; i < 4; i++) {
                 if (i != activePlayer) {
                     var player = document.querySelector("#player" + i);
@@ -1641,40 +1757,43 @@
                 arrows[i].style.display = "none";
             }
 
-            partnerMode.forEach((isEnabled, index) => {
+            // Replace forEach with for loop for iOS 9.3.5 compatibility
+            for (var index = 0; index < partnerMode.length; index++) {
+                var isEnabled = partnerMode[index];
                 if(isEnabled && index !== activePlayer) {
                     AppendPartnerBoxes(index);
-                    log(`Partner mode enabled for player ${index}`);
+                    log("Partner mode enabled for player " + index);
                 }
-            });
+            }
 
             for (var i = 0; i < numberOfPlayers; i++) 
             {
                 if(i !== activePlayer) 
                 {
                     var commanderDamageBox = document.querySelectorAll("#player" + activePlayer + " .commander-damage-box" + ".damage-" + i);
-                    commanderDamageBox.forEach((box) => 
-                    {
+                    // Replace forEach with for loop
+                    for (var j = 0; j < commanderDamageBox.length; j++) {
+                        var box = commanderDamageBox[j];
                         var damageClass = getDamageClass(box);
                         var opponent = damageClass.replace("damage-", "");
 
                         // Player has partner commanders
                         if(partnerMode[opponent]) {
-                            log(`${box} ${getClass(box, 'enemy-partner-')}`)
+                            log(box + " " + getClass(box, 'enemy-partner-'));
                             AppendPartnerBoxes(opponent);
                             var partnerNumber = getClass(box, 'enemy-partner-').replace('enemy-partner-', '');
-                            log(`Active damage from ${opponent} using Second Partner commander to ${activePlayer} from partner: ${partnerNumber} Current Total: ${box.textContent}`);
-                            document.querySelector(`#player${opponent} .partner-damage-${partnerNumber}`).textContent = box.textContent;
+                            log("Active damage from " + opponent + " using Second Partner commander to " + activePlayer + " from partner: " + partnerNumber + " Current Total: " + box.textContent);
+                            document.querySelector("#player" + opponent + " .partner-damage-" + partnerNumber).textContent = box.textContent;
                         } 
                         // Player only has 1 commander
                         else if(!box.classList.contains("partner"))
                         {                    
-                            log(`[No Partner Commanders] Active damage from ${opponent} to ${activePlayer}: ${box.textContent}`);
+                            log("[No Partner Commanders] Active damage from " + opponent + " to " + activePlayer + ": " + box.textContent);
                             var damageCounter = document.querySelector(".command-damage." + damageClass);
                             damageCounter.textContent = parseInt(box.textContent);
                             removeClass(damageCounter, "disabled");
                         }
-                    });
+                    }
                 }
             }
         }
@@ -1690,14 +1809,16 @@
                 removeClass(halfElements[i], "disabled");
             }
 
-            // Bring back all life totals
-            document.querySelectorAll(".player").forEach((player) => {
+            // Bring back all life totals - Replace forEach with for loop
+            var players = document.querySelectorAll(".player");
+            for (var i = 0; i < players.length; i++) {
+                var player = players[i];
                 player.querySelector(".command-damage").textContent = "▶️Click to Exit";
                 removeClass(player.querySelector(".life-total"), "disabled");
                 removeClass(player.querySelector(".command-damage"), "active-cmd-damage-div");
                 removeClass(player.querySelector(".commander-damage-container"), "hidden-container");
                 addClass(player.querySelector(".command-damage"), "disabled");
-            });
+            }
 
             var arrows = document.querySelectorAll(".arrow-indicator");
             for (var i = 0; i < arrows.length; i++) {
@@ -1709,12 +1830,13 @@
                 checkPlayerStatus(i);
             }
 
-            // Remove partner boxes if any
-            partnerMode.forEach((isEnabled, index) => {
+            // Remove partner boxes if any - Replace forEach with for loop
+            for (var index = 0; index < partnerMode.length; index++) {
+                var isEnabled = partnerMode[index];
                 if(isEnabled) {
                     RemovePartnerBoxes(index);
                 }
-            });
+            }
 
             // Exit commander damage mode
             inCommanderDamageMode = false;
@@ -1723,13 +1845,15 @@
         // Helper functions for classList compatibility
         function hasClass(element, className) {
             // Handle arrays, NodeLists, and other array-like objects
-            if (element.length !== undefined) {
-                for (let i = 0; i < element.length; i++) {
+            if (element && element.length !== undefined && typeof element.length === 'number') {
+                for (var i = 0; i < element.length; i++) {
                     hasClass(element[i], className);
                 }
                 return;
             }
 
+            if (!element) return false;
+            
             if (element.classList) {
                 return element.classList.contains(className);
             }
@@ -1738,12 +1862,14 @@
 
         function addClass(element, className) {
             // Handle arrays, NodeLists, and other array-like objects
-            if (element.length !== undefined) {
-                for (let i = 0; i < element.length; i++) {
+            if (element && element.length !== undefined && typeof element.length === 'number') {
+                for (var i = 0; i < element.length; i++) {
                     addClass(element[i], className);
                 }
                 return;
             }
+
+            if (!element) return;
 
             if (element.classList) {
                 element.classList.add(className);
@@ -1754,12 +1880,14 @@
 
         function removeClass(element, className) {
             // Handle arrays, NodeLists, and other array-like objects
-            if (element.length !== undefined) {
-                for (let i = 0; i < element.length; i++) {
+            if (element && element.length !== undefined && typeof element.length === 'number') {
+                for (var i = 0; i < element.length; i++) {
                     removeClass(element[i], className);
                 }
                 return;
             }
+
+            if (!element) return;
 
             // Handle single element
             if (element.classList) {
@@ -1811,6 +1939,7 @@
             inCommanderDamageMode = false;
 
             // Close any open panel
+
             if (activePlayerPanel !== -1) {
                 togglePlayerPanel(activePlayerPanel);
             }
@@ -1823,7 +1952,7 @@
 
             var arrows = document.querySelectorAll(".arrow-indicator");
             for (var i = 0; i < arrows.length; i++) {
-                arrows[i].style.display = "block";
+                               arrows[i].style.display = "block";
             }
 
             // Close menu
@@ -1837,12 +1966,16 @@
 
         function hideElements(element) {
             // Handle arrays, NodeLists, and other array-like objects
-            if (element.length !== undefined) {
-                for (let i = 0; i < element.length; i++) {
+            if (element && element.length !== undefined && typeof element.length === 'number') {
+                for (var i = 0; i < element.length; i++) {
                     hideElements(element[i]);
                 }
                 return;
             }
+
+            if (!element) return;
+
+           
 
             element.style.display = "none";
             element.style.pointerEvents = "none";
@@ -1852,12 +1985,15 @@
 
         function showElements(element, makeBlock) {
             // Handle arrays, NodeLists, and other array-like objects
-            if (element.length !== undefined) {
-                for (let i = 0; i < element.length; i++) {
+            if (element && element.length !== undefined && typeof element.length === 'number') {
+                for (var i = 0; i < element.length; i++) {
                     showElements(element[i]);
                 }
                 return;
             }
+
+            if (!element) return;
+
             if (makeBlock) {
                 element.style.display = "block";
             } else {
@@ -1877,6 +2013,7 @@
                 removeClass(menu, "menu-open");
             } else {
                 addClass(menu, "menu-open");
+
             }
         }
     </script>
