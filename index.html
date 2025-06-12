@@ -80,8 +80,8 @@
                 align-items: center;
                 color: rgb(0, 0, 0);
                 font-weight: bold;
-                border-radius: 0;
-                /* Removed border radius for cleaner sliding */
+                border-radius: 15px;
+                /* Added rounded corners */
                 -webkit-user-select: none;
                 -moz-user-select: none;
                 -ms-user-select: none;
@@ -109,25 +109,25 @@
 
             .settings-panel.top-left {
                 top: 0;
-                left: 0;
+                left: 30px;
                 transform: rotate(90deg);
             }
 
             .settings-panel.top-right {
                 top: 0;
-                right: 0;
+                left: -30px;
                 transform: rotate(-90deg);
             }
 
             .settings-panel.bottom-left {
                 bottom: 0;
-                left: 0;
+                left: 30px;
                 transform: rotate(90deg);
             }
 
             .settings-panel.bottom-right {
                 bottom: 0;
-                right: 0;
+                left: -30px;
                 transform: rotate(-90deg);
             }
 
@@ -307,21 +307,25 @@
                 transform: translateX(80%);
             }
 
-            /* Player colors - Deep dark mode palette */
+            /* Player colors - Deep dark mode palette with gradients */
             .player0 {
-                background-color: #da3633;
+                background: linear-gradient(135deg, #da3633 0%, #b12b29 50%, #9a2623 100%);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(218, 54, 51, 0.3);
             }
 
             .player1 {
-                background-color: #238636;
+                background: linear-gradient(135deg, #238636 0%, #1a6629 50%, #155520 100%);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(35, 134, 54, 0.3);
             }
 
             .player2 {
-                background-color: #1f6feb;
+                background: linear-gradient(135deg, #1f6feb 0%, #1958c7 50%, #1448a0 100%);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(31, 111, 235, 0.3);
             }
 
             .player3 {
-                background-color: #fb8500;
+                background: linear-gradient(135deg, #fb8500 0%, #d16a00 50%, #b8590c 100%);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(251, 133, 0, 0.3);
             }
 
             .command-damage {
@@ -497,19 +501,19 @@
                 margin-bottom: 2px;
             }
 
-            .damage-1 {
+            .commander-damage-container .damage-1 {
                 background-color: #238636;
             }
 
-            .damage-3 {
+            .commander-damage-container .damage-3 {
                 background-color: #fb8500;
             }
 
-            .damage-2 {
+            .commander-damage-container .damage-2 {
                 background-color: #1f6feb;
             }
 
-            .damage-0 {
+            .commander-damage-container .damage-0 {
                 background-color: #da3633;
             }
 
@@ -643,8 +647,9 @@
             }
 
             .active-cmd-damage-div {
-                background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%);
-                background-image: linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%);
+                /*background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%); 
+                background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%);*/
+                box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1), 0 0 15px rgba(255, 255, 255, 0.2);
             }
 
             .disabled {
@@ -664,8 +669,9 @@
 
             /* New styles for the death feature */
             .player-dead {
-                background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%);
-                background-image: linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%);
+                /*background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
+                background-image: linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);*/
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 8px rgba(0, 0, 0, 0.5);
             }
 
             .skull {
@@ -818,7 +824,7 @@
 
             .partner-damage .plus {
                 position: absolute;
-                left: 50% !important;
+                left: 37% !important;
                 top: 25% !important;
                 /*-webkit-transform: translateX(-50%);
                 transform: translateX(-50%);*/
@@ -925,7 +931,6 @@
             <div class="player-container top-left" id="container0">
                 <div class="settings-panel top-left">
                     <div class="setting-btn" onclick="resetPlayerLife(0)">Reset Life</div>
-                    <div class="setting-btn" id="toggleDeadBtn0" onclick="togglePlayerDead(0)">Mark Dead</div>
                     <div class="setting-btn" onclick="resetCommanderDamage(0)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle0" onclick="togglePartnerMode(0)">Partner Mode:
                         OFF</div>
@@ -980,7 +985,6 @@
             <div class="player-container top-right" id="container1">
                 <div class="settings-panel top-right">
                     <div class="setting-btn" onclick="resetPlayerLife(1)">Reset Life</div>
-                    <div class="setting-btn" id="toggleDeadBtn1" onclick="togglePlayerDead(1)">Mark Dead</div>
                     <div class="setting-btn" onclick="resetCommanderDamage(1)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle1" onclick="togglePartnerMode(1)">Partner Mode:
                         OFF</div>
@@ -1034,7 +1038,6 @@
             <div class="player-container bottom-left" id="container2">
                 <div class="settings-panel bottom-left">
                     <div class="setting-btn" onclick="resetPlayerLife(2)">Reset Life</div>
-                    <div class="setting-btn" id="toggleDeadBtn2" onclick="togglePlayerDead(2)">Mark Dead</div>
                     <div class="setting-btn" onclick="resetCommanderDamage(2)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle2" onclick="togglePartnerMode(2)">Partner Mode:
                         OFF</div>
@@ -1088,7 +1091,6 @@
             <div class="player-container bottom-right" id="container3">
                 <div class="settings-panel bottom-right">
                     <div class="setting-btn" onclick="resetPlayerLife(3)">Reset Life</div>
-                    <div class="setting-btn" id="toggleDeadBtn3" onclick="togglePlayerDead(3)">Mark Dead</div>
                     <div class="setting-btn" onclick="resetCommanderDamage(3)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle3" onclick="togglePartnerMode(3)">Partner Mode:
                         OFF</div>
@@ -1137,11 +1139,12 @@
                     </div>
                 </div>
             </div>
-
-            <div class="radial-menu" id="radialMenu">
-                <div class="menu-button" onclick="toggleMenu()">Menu</div>
-                <div class="menu-option restart" onclick="restartGame()">RESTART</div>
-            </div>
+            <!--
+                <div class="radial-menu" id="radialMenu">
+                    <div class="menu-button" onclick="toggleMenu()">Menu</div>
+                    <div class="menu-option restart" onclick="restartGame()">RESTART</div>
+                </div>
+            -->
         </div>
 
     </body>
@@ -1527,7 +1530,7 @@
 
             playerLives[cmdDamagePlayerNumber] += (change * -1);
             document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
-            document.querySelector(`#player${cmdDamagePlayerNumber} .enemy-partner-${partnerNumber}`).textContent = currentActivePartnerDamageTotal;
+            document.querySelector(`#player${cmdDamagePlayerNumber} .damage-${player}.enemy-partner-${partnerNumber}`).textContent = currentActivePartnerDamageTotal;
 
             // Check player status after partner damage and life change
             checkPlayerStatus(cmdDamagePlayerNumber);
