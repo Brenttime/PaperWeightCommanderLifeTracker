@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- This site must work in IOS 9.3.5 so that it works on old Ipads. This site must support touch style interfaces. The only client that this site will use will be ipads.-->
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -824,10 +825,10 @@
 
             .partner-damage .plus {
                 position: absolute;
-                left: 37% !important;
-                top: 25% !important;
-                /*-webkit-transform: translateX(-50%);
-                transform: translateX(-50%);*/
+                left: 50% !important;
+                top: 25% !important; /* Slightly below top to mirror minus placement visually */
+                -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);
                 margin: 0;
                 padding: 0;
                 font-size: 2em; /* Reduced from 3em */
@@ -923,6 +924,29 @@
                     font-size: 1.5em; /* Consistent reduced size */
                 }
             }
+
+            /* Color picker specific tweaks */
+            .color-setting {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+            }
+
+            .color-setting input[type="color"] {
+                width: 42px;
+                height: 32px;
+                padding: 0;
+                border: none;
+                background: none;
+                cursor: pointer;
+            }
+
+            .color-setting span {
+                font-size: 0.9em;
+                flex: 1;
+                text-align: left;
+            }
         </style>
     </head>
     <body>
@@ -934,6 +958,9 @@
                     <div class="setting-btn" onclick="resetCommanderDamage(0)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle0" onclick="togglePartnerMode(0)">Partner Mode:
                         OFF</div>
+                    <label class="setting-btn color-setting"> <span>Player Color</span>
+                        <input type="color" id="colorPicker0" onchange="updatePlayerColor(0, this.value)" />
+                    </label>
 
                     <!-- New Poison Counter Control -->
                     <div class="poison-counter-container">
@@ -988,6 +1015,9 @@
                     <div class="setting-btn" onclick="resetCommanderDamage(1)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle1" onclick="togglePartnerMode(1)">Partner Mode:
                         OFF</div>
+                    <label class="setting-btn color-setting"> <span>Player Color</span>
+                        <input type="color" id="colorPicker1" onchange="updatePlayerColor(1, this.value)" />
+                    </label>
 
                     <!-- New Poison Counter Control -->
                     <div class="poison-counter-container">
@@ -1041,6 +1071,9 @@
                     <div class="setting-btn" onclick="resetCommanderDamage(2)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle2" onclick="togglePartnerMode(2)">Partner Mode:
                         OFF</div>
+                    <label class="setting-btn color-setting"> <span>Player Color</span>
+                        <input type="color" id="colorPicker2" onchange="updatePlayerColor(2, this.value)" />
+                    </label>
 
                     <!-- New Poison Counter Control -->
                     <div class="poison-counter-container">
@@ -1094,6 +1127,9 @@
                     <div class="setting-btn" onclick="resetCommanderDamage(3)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle3" onclick="togglePartnerMode(3)">Partner Mode:
                         OFF</div>
+                    <label class="setting-btn color-setting"> <span>Player Color</span>
+                        <input type="color" id="colorPicker3" onchange="updatePlayerColor(3, this.value)" />
+                    </label>
 
                     <!-- New Poison Counter Control -->
                     <div class="poison-counter-container">
@@ -1163,12 +1199,115 @@
         var inCommanderDamageMode = false; // Track if any player is in commander damage mode
         var activePlayerPanel = -1; // Track which player's panel is slid out
 
+        // Player color customization (defaults mirror original CSS)
+        var playerColors = ['#da3633', '#238636', '#1f6feb', '#fb8500'];
+        var colorStyleElement = null;
+
+        function shadeColor(hex, percent) {
+            // percent negative to darken, positive to lighten
+            hex = hex.replace('#','');
+            if(hex.length === 3) { hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]; }
+            var r = parseInt(hex.substring(0,2),16);
+            var g = parseInt(hex.substring(2,4),16);
+            var b = parseInt(hex.substring(4,6),16);
+            r = Math.min(255, Math.max(0, r + Math.round(255 * (percent/100))));
+            g = Math.min(255, Math.max(0, g + Math.round(255 * (percent/100))));
+            b = Math.min(255, Math.max(0, b + Math.round(255 * (percent/100))));
+            return '#' + (r.toString(16).padStart(2,'0')) + (g.toString(16).padStart(2,'0')) + (b.toString(16).padStart(2,'0'));
+        }
+
+        function contrastColor(hex) {
+            // Determine whether black or white text has better WCAG contrast against the given background.
+            // Returns '#000000' for light backgrounds (so text is black) and '#FFFFFF' for dark ones.
+            hex = hex.replace('#','');
+            if (hex.length === 3) { hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]; }
+            var r = parseInt(hex.substr(0,2),16) / 255;
+            var g = parseInt(hex.substr(2,2),16) / 255;
+            var b = parseInt(hex.substr(4,2),16) / 255;
+
+            // Linearize sRGB
+            function lin(c){ return (c <= 0.03928) ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); }
+            var R = lin(r), G = lin(g), B = lin(b);
+            var L = 0.2126*R + 0.7152*G + 0.0722*B; // Relative luminance
+
+            // Contrast ratio with white & black per WCAG: (L1 + 0.05) / (L2 + 0.05)
+            var contrastWhite = (1.0 + 0.05) / (L + 0.05);
+            var contrastBlack = (L + 0.05) / (0 + 0.05);
+
+            // Pick color giving higher ratio; tie goes to black (better on very light tones)
+            return (contrastBlack >= contrastWhite) ? '#000000' : '#FFFFFF';
+        }
+
+        function persistColors() {
+            for (var i=0;i<playerColors.length;i++) {
+                try { localStorage.setItem('playerColor'+i, playerColors[i]); } catch(e) {}
+            }
+        }
+
+        function loadPersistedColors() {
+            for (var i=0;i<playerColors.length;i++) {
+                try {
+                    var stored = localStorage.getItem('playerColor'+i);
+                    if(stored) { playerColors[i] = stored; }
+                } catch(e) {}
+            }
+        }
+
+        function updateDynamicColorsStyle() {
+            if(!colorStyleElement) {
+                colorStyleElement = document.createElement('style');
+                colorStyleElement.id = 'dynamic-player-colors';
+                document.head.appendChild(colorStyleElement);
+            }
+            var css = '';
+            for (var i=0;i<playerColors.length;i++) {
+                var base = playerColors[i];
+                var mid = shadeColor(base, -15);
+                var dark = shadeColor(base, -30);
+                var partner = shadeColor(base, -25);
+                var textCol = contrastColor(base);
+                // Player panel text color
+                css += '.player'+i+'{background:linear-gradient(135deg,'+base+' 0%,'+mid+' 50%,'+dark+' 100%);color:'+textCol+';}';
+                // Commander damage boxes (main + partner) get both background and computed contrasting text color
+                css += '.commander-damage-container .damage-'+i+'{background-color:'+base+';color:'+textCol+';}';
+                css += '.commander-damage-container .damage-'+i+'.partner{background-color:'+partner+';color:'+textCol+';}';
+                // Half panels +/- and tap counters inside this player's panel
+                css += '#player'+i+' .half, #player'+i+' .half .minus, #player'+i+' .half .plus, #player'+i+' .half .tap-counter{color:'+textCol+';}';
+                // Partner damage interactive sections (plus/minus + tap counters) when shown for others during cmd damage mode
+                css += '#player'+i+' .partner-damage .minus, #player'+i+' .partner-damage .plus, #player'+i+' .partner-damage .tap-counter, #player'+i+' .regular-commander-damage, #player'+i+' .partner-damage-0, #player'+i+' .partner-damage-1 {color:'+textCol+';}';
+            }
+            colorStyleElement.textContent = css;
+
+            // Update color inputs to reflect current values
+            for (var j=0;j<playerColors.length;j++) {
+                var picker = document.getElementById('colorPicker'+j);
+                if (picker && picker.value.toLowerCase() !== playerColors[j].toLowerCase()) {
+                    picker.value = playerColors[j];
+                }
+            }
+        }
+
+        function updatePlayerColor(playerIndex, hex) {
+            if(!hex) return;
+            playerColors[playerIndex] = hex;
+            updateDynamicColorsStyle();
+            persistColors();
+        }
+
         // Touch event variables
         var touchStartX = 0;
         var touchStartY = 0;
 
         // Initialize: Hide all skulls and set up touch events
         window.onload = function () {
+            // Load persisted colors first
+            loadPersistedColors();
+            updateDynamicColorsStyle();
+            // Initialize color pickers with values (in case persistence applied)
+            for (var cp=0; cp<playerColors.length; cp++) {
+                var pickerEl = document.getElementById('colorPicker'+cp);
+                if (pickerEl) { pickerEl.value = playerColors[cp]; }
+            }
             for (var i = 0; i < 4; i++) {
                 document.getElementById("skull" + i).style.display = "none";
                 setupTouchEvents(i);
@@ -1330,6 +1469,8 @@
                             } else {
                                 partnerBox.style.display = "none";
                             }
+                            // Ensure updated color applies (in case dynamic style inserted after initial render)
+                            // No action needed: colors driven by class selectors updated globally
                         }
                     }
                 }
