@@ -141,7 +141,7 @@
                 cursor: pointer;
                 text-align: center;
                 min-width: 160px;
-                margin-bottom: 15px;
+                margin-bottom: 2px;
                 border: 1px solid #30363d;
             }
 
@@ -151,7 +151,7 @@
 
             /* Partner toggle button styling */
             .partner-toggle {
-                margin-bottom: 15px;
+                /*margin-bottom: 15px;*/
             }
 
             .partner {
@@ -219,7 +219,7 @@
             /* Poison indicator on main screen */
             .poison-indicator {
                 position: absolute;
-                font-size: 1.2em;
+                font-size: 1.4em;
                 font-weight: bold;
                 display: flex;
                 align-items: center;
@@ -313,19 +313,19 @@
 
             /* Slide animation classes */
             .player-container.top-left.active .player {
-                transform: translateX(-80%);
+                transform: translateX(-90%);
             }
 
             .player-container.top-right.active .player {
-                transform: translateX(80%);
+                transform: translateX(90%);
             }
 
             .player-container.bottom-left.active .player {
-                transform: translateX(-80%);
+                transform: translateX(-90%);
             }
 
             .player-container.bottom-right.active .player {
-                transform: translateX(80%);
+                transform: translateX(90%);
             }
 
             /* Player colors - Deep dark mode palette with gradients */
@@ -496,30 +496,30 @@
             }
 
             .commander-damage-box {
-                width: 40px;
-                height: 40px;
+                width: 45px;
+                height: 45px;
                 display: -webkit-box;
                 display: -webkit-flex;
                 display: flex;
-                margin-right: 5px;
+                margin-right: 6px;
                 -webkit-box-align: center;
                 -webkit-align-items: center;
                 align-items: center;
                 -webkit-box-pack: center;
                 -webkit-justify-content: center;
                 justify-content: center;
-                font-size: 1em;
+                font-size: 1.1em;
                 color: white;
                 font-weight: bold;
-                border-radius: 5px;
+                border-radius: 6px;
                 cursor: pointer;
             }
 
             /* Partner commander boxes styling */
             .commander-damage-box.partner {
-                height: 30px;
-                font-size: 0.8em;
-                margin-bottom: 2px;
+                height: 34px;
+                font-size: 0.9em;
+                margin-bottom: 3px;
             }
 
             .commander-damage-container .damage-1 {
@@ -947,10 +947,14 @@
 
             /* Color picker specific tweaks */
             .color-setting {
+                display: flex !important;
+                /*
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 gap: 8px;
+                /*flex-direction: column;
+                padding: 8px 15px;*/
             }
 
             .color-setting input[type="color"] {
@@ -964,8 +968,48 @@
 
             .color-setting span {
                 font-size: 0.9em;
-                flex: 1;
-                text-align: left;
+                text-align: center;
+                margin-bottom: 8px;
+            }
+
+            /* Custom color picker for iOS 9.3.5 compatibility */
+            .custom-color-picker {
+                display: flex;
+                grid-template-columns: repeat(8, 1fr);
+                gap: 4px;
+                width: 100%;
+                margin-top: 5px;
+                padding: 0 5px;
+            }
+
+            .color-option {
+                width: 26px;
+                height: 26px;
+                border-radius: 4px;
+                cursor: pointer;
+                border: 2px solid transparent;
+                transition: all 0.2s;
+                margin: 0 auto;
+            }
+
+            .color-option:hover {
+                transform: scale(1.1);
+            }
+
+            .color-option.selected {
+                border-color: #fff;
+                box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+                transform: scale(1.1);
+            }
+
+            /* Hide HTML5 color input on iOS (fallback) */
+            @supports (-webkit-overflow-scrolling: touch) {
+                .color-setting input[type="color"] {
+                    display: none;
+                }
+                .custom-color-picker {
+                    display: grid;
+                }
             }
         </style>
     </head>
@@ -978,9 +1022,6 @@
                     <div class="setting-btn" onclick="resetCommanderDamage(0)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle0" onclick="togglePartnerMode(0)">Partner Mode:
                         OFF</div>
-                    <label class="setting-btn color-setting"> <span>Player Color</span>
-                        <input type="color" id="colorPicker0" onchange="updatePlayerColor(0, this.value)" />
-                    </label>
 
                     <!-- New Poison Counter Control -->
                     <div class="poison-counter-container">
@@ -990,6 +1031,22 @@
                             <div class="poison-symbol">☠</div>
                         </div>
                         <div class="poison-arrow" onclick="adjustPoisonCounter(0, 1)">+</div>
+                    </div>
+
+                    <!-- Color picker moved to bottom -->
+                    <div class="setting-btn color-setting">
+                        <span>Player Color</span>
+                        <input type="color" id="colorPicker0" onchange="updatePlayerColor(0, this.value)" />
+                        <div class="custom-color-picker" id="customColorPicker0">
+                            <div class="color-option" style="background-color: #da3633;" data-color="#da3633"></div>
+                            <div class="color-option" style="background-color: #238636;" data-color="#238636"></div>
+                            <div class="color-option" style="background-color: #1f6feb;" data-color="#1f6feb"></div>
+                            <div class="color-option" style="background-color: #fb8500;" data-color="#fb8500"></div>
+                            <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
+                            <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
+                            <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
+                            <div class="color-option" style="background-color: #84cc16;" data-color="#84cc16"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="player player0" id="player0">
@@ -1035,9 +1092,6 @@
                     <div class="setting-btn" onclick="resetCommanderDamage(1)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle1" onclick="togglePartnerMode(1)">Partner Mode:
                         OFF</div>
-                    <label class="setting-btn color-setting"> <span>Player Color</span>
-                        <input type="color" id="colorPicker1" onchange="updatePlayerColor(1, this.value)" />
-                    </label>
 
                     <!-- New Poison Counter Control -->
                     <div class="poison-counter-container">
@@ -1047,6 +1101,22 @@
                             <div class="poison-symbol">☠</div>
                         </div>
                         <div class="poison-arrow" onclick="adjustPoisonCounter(1, 1)">+</div>
+                    </div>
+
+                    <!-- Color picker moved to bottom -->
+                    <div class="setting-btn color-setting">
+                        <span>Player Color</span>
+                        <input type="color" id="colorPicker1" onchange="updatePlayerColor(1, this.value)" />
+                        <div class="custom-color-picker" id="customColorPicker1">
+                            <div class="color-option" style="background-color: #da3633;" data-color="#da3633"></div>
+                            <div class="color-option" style="background-color: #238636;" data-color="#238636"></div>
+                            <div class="color-option" style="background-color: #1f6feb;" data-color="#1f6feb"></div>
+                            <div class="color-option" style="background-color: #fb8500;" data-color="#fb8500"></div>
+                            <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
+                            <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
+                            <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
+                            <div class="color-option" style="background-color: #84cc16;" data-color="#84cc16"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="player player1" id="player1">
@@ -1091,9 +1161,6 @@
                     <div class="setting-btn" onclick="resetCommanderDamage(2)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle2" onclick="togglePartnerMode(2)">Partner Mode:
                         OFF</div>
-                    <label class="setting-btn color-setting"> <span>Player Color</span>
-                        <input type="color" id="colorPicker2" onchange="updatePlayerColor(2, this.value)" />
-                    </label>
 
                     <!-- New Poison Counter Control -->
                     <div class="poison-counter-container">
@@ -1103,6 +1170,22 @@
                             <div class="poison-symbol">☠</div>
                         </div>
                         <div class="poison-arrow" onclick="adjustPoisonCounter(2, 1)">+</div>
+                    </div>
+
+                    <!-- Color picker moved to bottom -->
+                    <div class="setting-btn color-setting">
+                        <span>Player Color</span>
+                        <input type="color" id="colorPicker2" onchange="updatePlayerColor(2, this.value)" />
+                        <div class="custom-color-picker" id="customColorPicker2">
+                            <div class="color-option" style="background-color: #da3633;" data-color="#da3633"></div>
+                            <div class="color-option" style="background-color: #238636;" data-color="#238636"></div>
+                            <div class="color-option" style="background-color: #1f6feb;" data-color="#1f6feb"></div>
+                            <div class="color-option" style="background-color: #fb8500;" data-color="#fb8500"></div>
+                            <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
+                            <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
+                            <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
+                            <div class="color-option" style="background-color: #84cc16;" data-color="#84cc16"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="player player2" id="player2">
@@ -1147,9 +1230,6 @@
                     <div class="setting-btn" onclick="resetCommanderDamage(3)">Reset Cmd DMG</div>
                     <div class="setting-btn partner-toggle" id="partnerToggle3" onclick="togglePartnerMode(3)">Partner Mode:
                         OFF</div>
-                    <label class="setting-btn color-setting"> <span>Player Color</span>
-                        <input type="color" id="colorPicker3" onchange="updatePlayerColor(3, this.value)" />
-                    </label>
 
                     <!-- New Poison Counter Control -->
                     <div class="poison-counter-container">
@@ -1159,6 +1239,22 @@
                             <div class="poison-symbol">☠</div>
                         </div>
                         <div class="poison-arrow" onclick="adjustPoisonCounter(3, 1)">+</div>
+                    </div>
+
+                    <!-- Color picker moved to bottom -->
+                    <div class="setting-btn color-setting">
+                        <span>Player Color</span>
+                        <input type="color" id="colorPicker3" onchange="updatePlayerColor(3, this.value)" />
+                        <div class="custom-color-picker" id="customColorPicker3">
+                            <div class="color-option" style="background-color: #da3633;" data-color="#da3633"></div>
+                            <div class="color-option" style="background-color: #238636;" data-color="#238636"></div>
+                            <div class="color-option" style="background-color: #1f6feb;" data-color="#1f6feb"></div>
+                            <div class="color-option" style="background-color: #fb8500;" data-color="#fb8500"></div>
+                            <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
+                            <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
+                            <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
+                            <div class="color-option" style="background-color: #84cc16;" data-color="#84cc16"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="player player3" id="player3">
@@ -1307,6 +1403,8 @@
                     if (picker && picker.value.toLowerCase() !== playerColors[j].toLowerCase()) {
                         picker.value = playerColors[j];
                     }
+                    // Update custom color picker selection
+                    updateCustomColorPickerSelection(j);
                 }
             } catch(e) {
                 console.log("Color update error: " + e.message);
@@ -1319,8 +1417,77 @@
                 playerColors[playerIndex] = hex;
                 updateDynamicColorsStyle();
                 persistColors();
+                updateCustomColorPickerSelection(playerIndex);
             } catch(e) {
                 console.log("Player color update error: " + e.message);
+            }
+        }
+
+        // iOS 9.3.5 compatible custom color picker function
+        function selectCustomColor(playerIndex, color) {
+            try {
+                updatePlayerColor(playerIndex, color);
+                // Update HTML5 color input if available
+                var picker = document.getElementById('colorPicker' + playerIndex);
+                if (picker) {
+                    picker.value = color;
+                }
+            } catch(e) {
+                console.log("Custom color selection error: " + e.message);
+            }
+        }
+
+        // Setup touch events for custom color picker options
+        function setupCustomColorPickerEvents() {
+            try {
+                for (var playerIndex = 0; playerIndex < 4; playerIndex++) {
+                    var customPicker = document.getElementById('customColorPicker' + playerIndex);
+                    if (!customPicker) continue;
+                    
+                    var colorOptions = customPicker.querySelectorAll('.color-option');
+                    for (var i = 0; i < colorOptions.length; i++) {
+                        var option = colorOptions[i];
+                        var color = option.getAttribute('data-color');
+                        
+                        // Create closure to capture variables properly
+                        (function(pi, c, opt) {
+                            function handleColorSelect(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                selectCustomColor(pi, c);
+                            }
+                            
+                            opt.addEventListener('click', handleColorSelect);
+                            opt.addEventListener('touchend', handleColorSelect);
+                        })(playerIndex, color, option);
+                    }
+                }
+            } catch(e) {
+                console.log("Custom color picker events setup error: " + e.message);
+            }
+        }
+
+        // Update custom color picker visual selection
+        function updateCustomColorPickerSelection(playerIndex) {
+            try {
+                var customPicker = document.getElementById('customColorPicker' + playerIndex);
+                if (!customPicker) return;
+                
+                var colorOptions = customPicker.querySelectorAll('.color-option');
+                var currentColor = playerColors[playerIndex].toLowerCase();
+                
+                for (var i = 0; i < colorOptions.length; i++) {
+                    var option = colorOptions[i];
+                    var optionColor = option.getAttribute('data-color').toLowerCase();
+                    
+                    if (optionColor === currentColor) {
+                        addClass(option, 'selected');
+                    } else {
+                        removeClass(option, 'selected');
+                    }
+                }
+            } catch(e) {
+                console.log("Custom color picker update error: " + e.message);
             }
         }
 
@@ -1338,7 +1505,11 @@
                 for (var cp=0; cp<playerColors.length; cp++) {
                     var pickerEl = document.getElementById('colorPicker'+cp);
                     if (pickerEl) { pickerEl.value = playerColors[cp]; }
+                    // Initialize custom color picker selections
+                    updateCustomColorPickerSelection(cp);
                 }
+                // Setup custom color picker touch events
+                setupCustomColorPickerEvents();
             } catch(e) {
                 console.log("Color initialization error: " + e.message);
             }
