@@ -264,29 +264,49 @@
                 font-size: 24px;
                 z-index: 15;
                 opacity: 0.7;
+                cursor: pointer;
+                /* Ensure touch target is large enough for iOS 9.3.5 */
+                min-width: 44px;
+                min-height: 44px;
+                /* iOS 9.3.5 compatible flexbox */
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                align-items: center;
+                -webkit-box-pack: center;
+                -webkit-justify-content: center;
+                justify-content: center;
+                /* iOS 9.3.5 touch compatibility */
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
             }
 
             /* Position arrows based on player position */
             .player-container.top-left .arrow-indicator {
-                right: 15px;
+                right: 10px;
                 top: 50%;
                 transform: translateY(-50%);
             }
 
             .player-container.top-right .arrow-indicator {
-                left: 15px;
+                left: 10px;
                 top: 50%;
                 transform: translateY(-50%);
             }
 
             .player-container.bottom-left .arrow-indicator {
-                right: 15px;
+                right: 10px;
                 top: 50%;
                 transform: translateY(-50%);
             }
 
             .player-container.bottom-right .arrow-indicator {
-                left: 15px;
+                left: 10px;
                 top: 50%;
                 transform: translateY(-50%);
             }
@@ -1213,7 +1233,9 @@
             r = Math.min(255, Math.max(0, r + Math.round(255 * (percent/100))));
             g = Math.min(255, Math.max(0, g + Math.round(255 * (percent/100))));
             b = Math.min(255, Math.max(0, b + Math.round(255 * (percent/100))));
-            return '#' + (r.toString(16).padStart(2,'0')) + (g.toString(16).padStart(2,'0')) + (b.toString(16).padStart(2,'0'));
+            // iOS 9.3.5 compatible padding function
+            function pad(str) { return str.length < 2 ? '0' + str : str; }
+            return '#' + pad(r.toString(16)) + pad(g.toString(16)) + pad(b.toString(16));
         }
 
         function contrastColor(hex) {
@@ -1221,9 +1243,9 @@
             // Returns '#000000' for light backgrounds (so text is black) and '#FFFFFF' for dark ones.
             hex = hex.replace('#','');
             if (hex.length === 3) { hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]; }
-            var r = parseInt(hex.substr(0,2),16) / 255;
-            var g = parseInt(hex.substr(2,2),16) / 255;
-            var b = parseInt(hex.substr(4,2),16) / 255;
+            var r = parseInt(hex.substring(0,2),16) / 255;
+            var g = parseInt(hex.substring(2,4),16) / 255;
+            var b = parseInt(hex.substring(4,6),16) / 255;
 
             // Linearize sRGB
             function lin(c){ return (c <= 0.03928) ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); }
@@ -1254,44 +1276,52 @@
         }
 
         function updateDynamicColorsStyle() {
-            if(!colorStyleElement) {
-                colorStyleElement = document.createElement('style');
-                colorStyleElement.id = 'dynamic-player-colors';
-                document.head.appendChild(colorStyleElement);
-            }
-            var css = '';
-            for (var i=0;i<playerColors.length;i++) {
-                var base = playerColors[i];
-                var mid = shadeColor(base, -15);
-                var dark = shadeColor(base, -30);
-                var partner = shadeColor(base, -25);
-                var textCol = contrastColor(base);
-                // Player panel text color
-                css += '.player'+i+'{background:linear-gradient(135deg,'+base+' 0%,'+mid+' 50%,'+dark+' 100%);color:'+textCol+';}';
-                // Commander damage boxes (main + partner) get both background and computed contrasting text color
-                css += '.commander-damage-container .damage-'+i+'{background-color:'+base+';color:'+textCol+';}';
-                css += '.commander-damage-container .damage-'+i+'.partner{background-color:'+partner+';color:'+textCol+';}';
-                // Half panels +/- and tap counters inside this player's panel
-                css += '#player'+i+' .half, #player'+i+' .half .minus, #player'+i+' .half .plus, #player'+i+' .half .tap-counter{color:'+textCol+';}';
-                // Partner damage interactive sections (plus/minus + tap counters) when shown for others during cmd damage mode
-                css += '#player'+i+' .partner-damage .minus, #player'+i+' .partner-damage .plus, #player'+i+' .partner-damage .tap-counter, #player'+i+' .regular-commander-damage, #player'+i+' .partner-damage-0, #player'+i+' .partner-damage-1 {color:'+textCol+';}';
-            }
-            colorStyleElement.textContent = css;
-
-            // Update color inputs to reflect current values
-            for (var j=0;j<playerColors.length;j++) {
-                var picker = document.getElementById('colorPicker'+j);
-                if (picker && picker.value.toLowerCase() !== playerColors[j].toLowerCase()) {
-                    picker.value = playerColors[j];
+            try {
+                if(!colorStyleElement) {
+                    colorStyleElement = document.createElement('style');
+                    colorStyleElement.id = 'dynamic-player-colors';
+                    document.head.appendChild(colorStyleElement);
                 }
+                var css = '';
+                for (var i=0;i<playerColors.length;i++) {
+                    var base = playerColors[i];
+                    var mid = shadeColor(base, -15);
+                    var dark = shadeColor(base, -30);
+                    var partner = shadeColor(base, -25);
+                    var textCol = contrastColor(base);
+                    // Player panel text color
+                    css += '.player'+i+'{background:linear-gradient(135deg,'+base+' 0%,'+mid+' 50%,'+dark+' 100%);color:'+textCol+';}';
+                    // Commander damage boxes (main + partner) get both background and computed contrasting text color
+                    css += '.commander-damage-container .damage-'+i+'{background-color:'+base+';color:'+textCol+';}';
+                    css += '.commander-damage-container .damage-'+i+'.partner{background-color:'+partner+';color:'+textCol+';}';
+                    // Half panels +/- and tap counters inside this player's panel
+                    css += '#player'+i+' .half, #player'+i+' .half .minus, #player'+i+' .half .plus, #player'+i+' .half .tap-counter{color:'+textCol+';}';
+                    // Partner damage interactive sections (plus/minus + tap counters) when shown for others during cmd damage mode
+                    css += '#player'+i+' .partner-damage .minus, #player'+i+' .partner-damage .plus, #player'+i+' .partner-damage .tap-counter, #player'+i+' .regular-commander-damage, #player'+i+' .partner-damage-0, #player'+i+' .partner-damage-1 {color:'+textCol+';}';
+                }
+                colorStyleElement.textContent = css;
+
+                // Update color inputs to reflect current values
+                for (var j=0;j<playerColors.length;j++) {
+                    var picker = document.getElementById('colorPicker'+j);
+                    if (picker && picker.value.toLowerCase() !== playerColors[j].toLowerCase()) {
+                        picker.value = playerColors[j];
+                    }
+                }
+            } catch(e) {
+                console.log("Color update error: " + e.message);
             }
         }
 
         function updatePlayerColor(playerIndex, hex) {
-            if(!hex) return;
-            playerColors[playerIndex] = hex;
-            updateDynamicColorsStyle();
-            persistColors();
+            try {
+                if(!hex) return;
+                playerColors[playerIndex] = hex;
+                updateDynamicColorsStyle();
+                persistColors();
+            } catch(e) {
+                console.log("Player color update error: " + e.message);
+            }
         }
 
         // Touch event variables
@@ -1300,24 +1330,33 @@
 
         // Initialize: Hide all skulls and set up touch events
         window.onload = function () {
-            // Load persisted colors first
-            loadPersistedColors();
-            updateDynamicColorsStyle();
-            // Initialize color pickers with values (in case persistence applied)
-            for (var cp=0; cp<playerColors.length; cp++) {
-                var pickerEl = document.getElementById('colorPicker'+cp);
-                if (pickerEl) { pickerEl.value = playerColors[cp]; }
+            try {
+                // Load persisted colors first
+                loadPersistedColors();
+                updateDynamicColorsStyle();
+                // Initialize color pickers with values (in case persistence applied)
+                for (var cp=0; cp<playerColors.length; cp++) {
+                    var pickerEl = document.getElementById('colorPicker'+cp);
+                    if (pickerEl) { pickerEl.value = playerColors[cp]; }
+                }
+            } catch(e) {
+                console.log("Color initialization error: " + e.message);
             }
+            
             for (var i = 0; i < 4; i++) {
-                document.getElementById("skull" + i).style.display = "none";
-                setupTouchEvents(i);
-                updatePoisonIndicator(i); // Initialize poison indicators
+                try {
+                    document.getElementById("skull" + i).style.display = "none";
+                    setupTouchEvents(i);
+                    updatePoisonIndicator(i); // Initialize poison indicators
 
-                // Remove any existing partner containers (they'll be created dynamically when needed)
-                var playerElement = document.getElementById("player" + i);
-                var partnerContainer = playerElement.querySelector(".partner-split-container");
-                if (partnerContainer) {
-                    playerElement.removeChild(partnerContainer);
+                    // Remove any existing partner containers (they'll be created dynamically when needed)
+                    var playerElement = document.getElementById("player" + i);
+                    var partnerContainer = playerElement.querySelector(".partner-split-container");
+                    if (partnerContainer) {
+                        playerElement.removeChild(partnerContainer);
+                    }
+                } catch(e) {
+                    console.log("Player " + i + " initialization error: " + e.message);
                 }
             }
         };
@@ -1503,12 +1542,17 @@
         function setupTouchEvents(playerIndex) {
             var playerElement = document.getElementById("player" + playerIndex);
             var containerElement = document.getElementById("container" + playerIndex);
+            var arrowIndicator = playerElement.querySelector(".arrow-indicator");
 
-            // Arrow indicator click handler
-            playerElement.querySelector(".arrow-indicator").addEventListener("click", function (e) {
+            // Arrow indicator click handler - add both click and touchend for iOS 9.3.5 compatibility
+            function handleSettingsToggle(e) {
                 e.stopPropagation(); // Prevent event from bubbling to player element
+                e.preventDefault(); // Prevent default touch behavior
                 togglePlayerPanel(playerIndex);
-            });
+            }
+
+            arrowIndicator.addEventListener("click", handleSettingsToggle);
+            arrowIndicator.addEventListener("touchend", handleSettingsToggle);
 
             // Setup touch events for swipe
             playerElement.addEventListener('touchstart', function (e) {
@@ -1654,14 +1698,14 @@
 
         function tapPartnerDamage(player, change, divElement, partnerNumber) 
         {
-            var partnerDamageDiv = document.querySelector(`#player${player}`).querySelector(`.partner-damage-${partnerNumber}`);
+            var partnerDamageDiv = document.querySelector("#player" + player).querySelector(".partner-damage-" + partnerNumber);
             var currentActivePartnerDamageTotal = parseInt(partnerDamageDiv.textContent);
             currentActivePartnerDamageTotal += change;
             partnerDamageDiv.textContent = currentActivePartnerDamageTotal;
 
             var cmdDamagePlayerLife = document.querySelector(".player.active-cmd-damage-div");
             var cmdDamagePlayerNumber = cmdDamagePlayerLife.id[cmdDamagePlayerLife.id.length - 1];
-            log(`Partner damage taken from player ${player} by Partner ${partnerNumber} with change of ${change} to player ${cmdDamagePlayerNumber}`);
+            log("Partner damage taken from player " + player + " by Partner " + partnerNumber + " with change of " + change + " to player " + cmdDamagePlayerNumber);
         
             // Update the commander damage for tracking - FIX: Track each partner separately
             var targetPlayer = parseInt(cmdDamagePlayerNumber);
@@ -1671,7 +1715,7 @@
 
             playerLives[cmdDamagePlayerNumber] += (change * -1);
             document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
-            document.querySelector(`#player${cmdDamagePlayerNumber} .damage-${player}.enemy-partner-${partnerNumber}`).textContent = currentActivePartnerDamageTotal;
+            document.querySelector("#player" + cmdDamagePlayerNumber + " .damage-" + player + ".enemy-partner-" + partnerNumber).textContent = currentActivePartnerDamageTotal;
 
             // Check player status after partner damage and life change
             checkPlayerStatus(cmdDamagePlayerNumber);
@@ -1723,7 +1767,7 @@
                 checkPlayerStatus(player);
             }
             else {
-                log(`Player ${fromPlayer} has dealt commander damage to player ${player} with change of ${change}`);
+                log("Player " + fromPlayer + " has dealt commander damage to player " + player + " with change of " + change);
                 var commandDamage = document.querySelector("#player" + player).querySelector(".command-damage");
                 var totalCmdDamage = parseInt(commandDamage.textContent);
                 totalCmdDamage += change;
@@ -1742,7 +1786,7 @@
 
                 // Update boxes with current damage values
                 document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
-                document.querySelector(`#player${cmdDamagePlayerNumber} .damage-${fromPlayer}`).textContent = totalCmdDamage;
+                document.querySelector("#player" + cmdDamagePlayerNumber + " .damage-" + fromPlayer).textContent = totalCmdDamage;
 
                 // Check player status after commander damage and life change
                 checkPlayerStatus(cmdDamagePlayerNumber);
@@ -1780,7 +1824,7 @@
         }
 
         function killPlayer(player) {
-            console.log(`kill ${player}`);
+            console.log("kill " + player);
             if (playersDead[player]) return; // If already dead, do nothing
 
             playersDead[player] = true;
@@ -1795,7 +1839,7 @@
         }
 
         function revivePlayer(player) {
-            console.log(`Revive ${player}`);
+            console.log("Revive " + player);
             if (!playersDead[player]) return; // If not dead, do nothing
 
             playersDead[player] = false;
