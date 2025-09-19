@@ -490,7 +490,7 @@
         function updatePoisonIndicator(player) {
             var indicator = document.getElementById("poison-indicator-" + player);
             if (poisonCounters[player] > 0) {
-                indicator.textContent = poisonCounters[player] + '<i class="fas fa-skull"></i>';
+                indicator.innerHTML ='<i class="fas fa-skull"></i>' +  poisonCounters[player];
                 addClass(indicator, "visible");
             } else {
                 removeClass(indicator, "visible");
