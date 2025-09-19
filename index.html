@@ -3,6 +3,17 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/fontawesome.min.css" integrity="sha512-M5Kq4YVQrjg5c2wsZSn27Dkfm/2ALfxmun0vUE3mPiJyK53hQBHYCVAtvMYEC7ZXmYLg8DVG4tF8gD27WmDbsg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/brands.min.css" integrity="sha512-WxpJXPm/Is1a/dzEdhdaoajpgizHQimaLGL/QqUIAjIihlQqlPQb1V9vkGs9+VzXD7rgI6O+UsSKl4u5K36Ydw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/regular.min.css" integrity="sha512-x3gns+l9p4mIK7vYLOCUoFS2P1gavFvnO9Its8sr0AkUk46bgf9R51D8xeRUwCSk+W93YbXWi19BYzXDNBH5SA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/solid.min.css" integrity="sha512-EHa6vH03/Ty92WahM0/tet1Qicl76zihDCkBnFhN3kFGQkC+mc86d7V+6y2ypiLbk3h0beZAGdUpzfMcb06cMg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/svg-with-js.min.css" integrity="sha512-KP5ksKgJgqZoPDFb3uoE2KZiyr7n3xt+Sp6WGuCVBracF4/ccuZ/uKzuTyGL0G2dzInIs0Oz6I4nX643bIeVDg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/svg.min.css" integrity="sha512-st1GzIoIPUBkxblWvRRTd+MkVD9R7hJpZ8Ea1er9AuDVRtFQjhtDtnGwoFXTQYfS1KoXy2QfQmCQicMxVLwzog==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/v4-font-face.min.css" integrity="sha512-uFdqh51FxMPYiN4CVQojKoVOXgXXVPmnghOLbDJfMtO7TCfzS1Fu2uToZvWNwJ2J3N6iiefv4h8HSTK6p6sP3w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/v4-shims.min.css" integrity="sha512-7LGn7K+dj+CdmuqnrbIF/57brSK+L1DGyHMgby+dTT5n3Y6Bgmy/MmwHdaFRgLfLr6vwBA2yHplAutXldP8qAQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/v5-font-face.min.css" integrity="sha512-Xq8J1do8QUh9Ag6v8gT7Bjemli3/vevIvEHRByRIx7Ac+KXuAj4spOVNKqkypa0rUxLT1muAzYdwTNlJpbnl8g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>Commander Life Tracker</title>
         <style>
@@ -1028,7 +1039,7 @@
                         <div class="poison-arrow" onclick="adjustPoisonCounter(0, -1)">−</div>
                         <div class="poison-display">
                             <div class="poison-value" id="poison-value-0">0</div>
-                            <div class="poison-symbol">☠</div>
+                            <div class="poison-symbol"><i class="fa-solid fa-skull-crossbones"></i></div>
                         </div>
                         <div class="poison-arrow" onclick="adjustPoisonCounter(0, 1)">+</div>
                     </div>
@@ -1050,11 +1061,11 @@
                     </div>
                 </div>
                 <div class="player player0" id="player0">
-                    <div class="arrow-indicator">⚙️</div>
+                    <div class="arrow-indicator"><i class="fa-solid fa-gear"></i></div>
                     <div class="command-damage disabled damage-0">▶️ Click to Exit</div>
                     <div class="life-total" id="life0">40</div>
-                    <div class="skull" id="skull0">☠️</div>
-                    <div class="poison-indicator" id="poison-indicator-0">0 ☠</div>
+                    <div class="skull" id="skull0"><i class="fa-solid fa-skull-crossbones"></i></div>
+                    <div class="poison-indicator" id="poison-indicator-0">0 <i class="fa-solid fa-skull-crossbones"></i></div>
 
                     <div class="half top-half basic-commander" onclick="tapLife(0, -1, this)">
                         <div class="minus">-</div>
@@ -1098,7 +1109,7 @@
                         <div class="poison-arrow" onclick="adjustPoisonCounter(1, -1)">−</div>
                         <div class="poison-display">
                             <div class="poison-value" id="poison-value-1">0</div>
-                            <div class="poison-symbol">☠</div>
+                            <div class="poison-symbol"><i class="fa-solid fa-skull-crossbones"></i></div>
                         </div>
                         <div class="poison-arrow" onclick="adjustPoisonCounter(1, 1)">+</div>
                     </div>
@@ -1120,11 +1131,11 @@
                     </div>
                 </div>
                 <div class="player player1" id="player1">
-                    <div class="arrow-indicator">⚙️</div>
+                    <div class="arrow-indicator"><i class="fa-solid fa-gear"></i></div>
                     <div class="command-damage disabled damage-1">▶️ Click to Exit</div>
                     <div class="life-total" id="life1">40</div>
-                    <div class="skull" id="skull1">☠️</div>
-                    <div class="poison-indicator" id="poison-indicator-1">0 ☠</div>
+                    <div class="skull" id="skull1"><i class="fa-solid fa-skull-crossbones"></i></div>
+                    <div class="poison-indicator" id="poison-indicator-1">0 <i class="fa-solid fa-skull-crossbones"></i></div>
                     <div class="half top-half basic-commander" onclick="tapLife(1, 1, this)">
                         <div class="plus">+</div>
                         <div class="tap-counter" id="tapCounter1Plus">+1</div>
@@ -1167,7 +1178,7 @@
                         <div class="poison-arrow" onclick="adjustPoisonCounter(2, -1)">−</div>
                         <div class="poison-display">
                             <div class="poison-value" id="poison-value-2">0</div>
-                            <div class="poison-symbol">☠</div>
+                            <div class="poison-symbol"><i class="fa-solid fa-skull-crossbones"></i></div>
                         </div>
                         <div class="poison-arrow" onclick="adjustPoisonCounter(2, 1)">+</div>
                     </div>
@@ -1189,11 +1200,11 @@
                     </div>
                 </div>
                 <div class="player player2" id="player2">
-                    <div class="arrow-indicator">⚙️</div>
+                    <div class="arrow-indicator"><i class="fa-solid fa-gear"></i></div>
                     <div class="command-damage disabled damage-2">▶️ Click to Exit</div>
                     <div class="life-total" id="life2">40</div>
-                    <div class="skull" id="skull2">☠️</div>
-                    <div class="poison-indicator" id="poison-indicator-2">0 ☠</div>
+                    <div class="skull" id="skull2"><i class="fa-solid fa-skull-crossbones"></i></div>
+                    <div class="poison-indicator" id="poison-indicator-2">0 <i class="fa-solid fa-skull-crossbones"></i></div>
                     <div class="half top-half basic-commander" onclick="tapLife(2, -1, this)">
                         <div class="minus">-</div>
                         <div class="tap-counter" id="tapCounter2Minus">-1</div>
@@ -1236,7 +1247,7 @@
                         <div class="poison-arrow" onclick="adjustPoisonCounter(3, -1)">−</div>
                         <div class="poison-display">
                             <div class="poison-value" id="poison-value-3">0</div>
-                            <div class="poison-symbol">☠</div>
+                            <div class="poison-symbol"><i class="fa-solid fa-skull-crossbones"></i></div>
                         </div>
                         <div class="poison-arrow" onclick="adjustPoisonCounter(3, 1)">+</div>
                     </div>
@@ -1258,11 +1269,11 @@
                     </div>
                 </div>
                 <div class="player player3" id="player3">
-                    <div class="arrow-indicator">⚙️</div>
+                    <div class="arrow-indicator"><i class="fa-solid fa-gear"></i></div>
                     <div class="command-damage disabled damage-3">▶️ Click to Exit</div>
                     <div class="life-total" id="life3">40</div>
-                    <div class="skull" id="skull3">☠️</div>
-                    <div class="poison-indicator" id="poison-indicator-3">0 ☠</div>
+                    <div class="skull" id="skull3"><i class="fa-solid fa-skull-crossbones"></i></div>
+                    <div class="poison-indicator" id="poison-indicator-3">0 <i class="fa-solid fa-skull-crossbones"></i></div>
                     <div class="half top-half basic-commander" onclick="tapLife(3, 1, this)">
                         <div class="plus">+</div>
                         <div class="tap-counter" id="tapCounter3Plus">+1</div>
