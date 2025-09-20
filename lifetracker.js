@@ -436,15 +436,53 @@ var playerLives = [40, 40, 40, 40];
             var containerElement = document.getElementById("container" + playerIndex);
             var arrowIndicator = playerElement.querySelector(".arrow-indicator");
 
-            // Arrow indicator click handler - add both click and touchend for iOS 9.3.5 compatibility
+            // Arrow indicator click / touch handlers
             function handleSettingsToggle(e) {
-                e.stopPropagation(); // Prevent event from bubbling to player element
-                e.preventDefault(); // Prevent default touch behavior
+                e.stopPropagation();
+                e.preventDefault();
+                // For touchend only toggle if touch originated on the arrow
+                if (e.type === 'touchend') {
+                    if (arrowIndicator.getAttribute('data-touch-origin') !== '1') {
+                        return; // touch ended here but did not start here
+                    }
+                    var startX = parseInt(arrowIndicator.getAttribute('data-tsx') || '0', 10);
+                    var startY = parseInt(arrowIndicator.getAttribute('data-tsy') || '0', 10);
+                    var t = e.changedTouches && e.changedTouches[0];
+                    if (t) {
+                        if (Math.abs(t.clientX - startX) > 15 || Math.abs(t.clientY - startY) > 15) {
+                            // Considered a swipe/move, not a deliberate tap
+                            arrowIndicator.removeAttribute('data-touch-origin');
+                            return;
+                        }
+                    }
+                }
                 togglePlayerPanel(playerIndex);
+                arrowIndicator.removeAttribute('data-touch-origin');
+                arrowIndicator.removeAttribute('data-tsx');
+                arrowIndicator.removeAttribute('data-tsy');
             }
 
-            arrowIndicator.addEventListener("click", handleSettingsToggle);
-            arrowIndicator.addEventListener("touchend", handleSettingsToggle);
+            // Track only touches that START on the arrow (prevents accidental toggle when finger lifts over arrow)
+            arrowIndicator.addEventListener('touchstart', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                var t = e.touches && e.touches[0];
+                if (t) {
+                    arrowIndicator.setAttribute('data-touch-origin', '1');
+                    arrowIndicator.setAttribute('data-tsx', t.clientX);
+                    arrowIndicator.setAttribute('data-tsy', t.clientY);
+                }
+            }, false);
+            arrowIndicator.addEventListener('touchend', handleSettingsToggle, false);
+            arrowIndicator.addEventListener('touchcancel', function(){
+                arrowIndicator.removeAttribute('data-touch-origin');
+                arrowIndicator.removeAttribute('data-tsx');
+                arrowIndicator.removeAttribute('data-tsy');
+            }, false);
+            arrowIndicator.addEventListener('click', function(e){
+                // Mouse / click path (desktop testing)
+                handleSettingsToggle(e);
+            }, false);
 
             // Setup touch events for swipe
             playerElement.addEventListener('touchstart', function (e) {
