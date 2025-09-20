@@ -1193,36 +1193,6 @@ var playerLives = [40, 40, 40, 40];
             }, false);
         }
 
-        // Multi-touch support for simultaneous life adjustments
-        var multiTouchLifeEnabled = false;
-        function enableMultiTouchLifeTaps(){
-            if(multiTouchLifeEnabled) return;
-            multiTouchLifeEnabled = true;
-            try {
-                for(var p=0; p<4; p++){
-                    var playerDiv = document.getElementById('player'+p);
-                    if(!playerDiv) continue;
-                    var halves = playerDiv.querySelectorAll('.half.basic-commander');
-                    for(var h=0; h<halves.length; h++){
-                        (function(playerIndex, halfEl){
-                            // Skip if already wired
-                            if(halfEl.getAttribute('data-mt-listener')) return;
-                            halfEl.setAttribute('data-mt-listener','1');
-                            halfEl.addEventListener('touchstart', function(ev){
-                                // Allow multiple fingers across different elements
-                                // Prevent synthetic click to avoid double increment
-                                if(ev) { ev.preventDefault(); ev.stopPropagation(); }
-                                // Determine change based on presence of plus/minus child
-                                var isPlus = !!halfEl.querySelector('.plus');
-                                var delta = isPlus ? 1 : -1;
-                                tapLife(playerIndex, delta, halfEl);
-                            }, false);
-                        })(p, halves[h]);
-                    }
-                }
-            } catch(e){ log('Multi-touch init error: '+ e.message); }
-        }
-
         // Decide starting player feature
         function decideStartingPlayer(){
             closeCentralMenu();
