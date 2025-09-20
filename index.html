@@ -150,11 +150,6 @@
                 background-color: #30363d;
             }
 
-            /* Partner toggle button styling */
-            .partner-toggle {
-                /*margin-bottom: 15px;*/
-            }
-
             .partner {
                 margin-top: 10px;
             }
@@ -1012,6 +1007,121 @@
                     display: grid;
                 }
             }
+
+            /* --- Central Long-Press Menu Additions --- */
+            .central-menu-button {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 85px;
+                height: 85px;
+                border-radius: 50%;
+                background: #21262d;
+                border: 2px solid #30363d;
+                color: #f0f6fc;
+                font-size: 0.85em;
+                font-weight: bold;
+                display: -webkit-box; display: -webkit-flex; display: flex;
+                -webkit-box-align: center; -webkit-align-items: center; align-items: center;
+                -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center;
+                z-index: 130; /* raised above any player/highlight layers */
+                user-select: none;
+                -webkit-user-select: none;
+                text-align: center;
+                padding: 6px;
+                box-shadow: 0 0 0 4px rgba(0,0,0,0.55), 0 0 14px 4px rgba(0,0,0,0.55); /* Ensure clear visual separation */
+            }
+            .central-menu-button:active { background:#30363d; }
+
+            .central-menu-overlay {
+                position: absolute;
+                top:0;left:0;right:0;bottom:0;
+                background: rgba(0,0,0,0.55);
+                z-index: 200; /* raised above central-menu-button (130) so menu appears on top */
+                opacity:0;
+                pointer-events:none;
+                -webkit-transition: opacity .25s; transition: opacity .25s;
+                display: -webkit-box; display:-webkit-flex; display:flex;
+                -webkit-box-align:center; -webkit-align-items:center; align-items:center;
+                -webkit-box-pack:center; -webkit-justify-content:center; justify-content:center;
+            }
+            .central-menu-overlay.open { opacity:1; pointer-events:auto; }
+
+            .central-menu {
+                background:#161b22;
+                border:2px solid #30363d;
+                border-radius:12px;
+                width:260px;
+                padding:12px 10px 8px 10px;
+                box-shadow:0 4px 18px rgba(0,0,0,0.6);
+            }
+            .central-menu-title { font-weight:bold; margin:0 0 8px 0; text-align:center; font-size:1.05em; }
+            .central-menu-item {
+                background:#21262d;
+                border:1px solid #30363d;
+                border-radius:6px;
+                padding:10px 12px;
+                margin:5px 0;
+                font-size:0.95em;
+                text-align:center;
+                cursor:pointer;
+                -webkit-user-select:none; user-select:none;
+            }
+            .central-menu-item:active { background:#30363d; }
+
+            .starting-player-announcement {
+                position:absolute; top:50%; left:50%;
+                -webkit-transform:translate(-50%, -50%);
+                transform:translate(-50%, -50%);
+                background:rgba(0,0,0,0.65);
+                padding:18px 28px;
+                border-radius:14px;
+                font-size:1.8em;
+                font-weight:bold;
+                letter-spacing:1px;
+                color:#fff;
+                opacity:0;
+                -webkit-transition: opacity .35s; transition: opacity .35s;
+                z-index:150; /* raised above central-menu-button (130) so announcement not obscured */
+                text-align:center;
+                pointer-events: none; /* allow clicks to pass through to central button */
+            }
+            .starting-player-announcement.show { opacity:1; }
+
+            .starting-player-highlight {
+                position: relative;
+                outline: 5px solid #ffffff;
+                box-shadow: 0 0 0 8px #ffffff, 0 0 28px 14px rgba(255,255,255,0.85), 0 0 60px 28px rgba(255,255,255,0.4);
+                -webkit-animation: startFlash 0.55s ease-in-out 0s 5 alternate;
+                animation: startFlash 0.55s ease-in-out 0s 5 alternate;
+                z-index: 20; /* keep highlight below central menu button */
+            }
+            .starting-player-highlight-fade { position: relative; }
+            .starting-player-highlight-fade:before,
+            .starting-player-highlight-fade:after {
+                content: '';
+                position: absolute;
+                top: -12%; left: -12%;
+                width: 124%; height: 124%;
+                border: 4px solid rgba(255,255,255,0.85);
+                border-radius: 20px;
+                opacity: 0;
+                pointer-events: none;
+                -webkit-animation: ringPulse 1.15s ease-out 0s 3;
+                animation: ringPulse 1.15s ease-out 0s 3;
+            }
+            .starting-player-highlight-fade:after {
+                -webkit-animation-delay: .35s;
+                animation-delay: .35s;
+                border-color: rgba(255,255,255,0.55);
+            }
+            @-webkit-keyframes startFlash { 0% { -webkit-transform: scale(1); transform: scale(1); filter: brightness(1); } 100% { -webkit-transform: scale(1.05); transform: scale(1.05); filter: brightness(1.25); } }
+            @keyframes startFlash { 0% { -webkit-transform: scale(1); transform: scale(1); filter: brightness(1); } 100% { -webkit-transform: scale(1.05); transform: scale(1.05); filter: brightness(1.25); } }
+            @-webkit-keyframes ringPulse { 0% { opacity:.9; -webkit-transform: scale(.80); transform: scale(.80); } 100% { opacity:0; -webkit-transform: scale(1.35); transform: scale(1.35); } }
+            @keyframes ringPulse { 0% { opacity:.9; -webkit-transform: scale(.80); transform: scale(.80); } 100% { opacity:0; -webkit-transform: scale(1.35); transform: scale(1.35); } }
+            /* --- End enhanced starting player highlight styles --- */
+            /* --- End Central Menu Additions --- */
         </style>
     </head>
     <body>
@@ -1292,12 +1402,17 @@
                     </div>
                 </div>
             </div>
-            <!--
-                <div class="radial-menu" id="radialMenu">
-                    <div class="menu-button" onclick="toggleMenu()">Menu</div>
-                    <div class="menu-option restart" onclick="restartGame()">RESTART</div>
+            <!-- Central Long-Press Menu Button -->
+            <div id="centralMenuButton" class="central-menu-button">Hold Menu</div>
+            <!-- Overlay Menu -->
+            <div id="centralMenuOverlay" class="central-menu-overlay" onclick="closeCentralMenu()">
+                <div class="central-menu" onclick="event.stopPropagation();">
+                    <div class="central-menu-title">Game Menu</div>
+                    <div class="central-menu-item" onclick="decideStartingPlayer()">Decide Starting Player</div>
+                    <div class="central-menu-item" onclick="closeCentralMenu()">Close</div>
                 </div>
-            -->
+            </div>
+            <div id="startingPlayerAnnouncement" class="starting-player-announcement"></div>
         </div>
 
     </body>

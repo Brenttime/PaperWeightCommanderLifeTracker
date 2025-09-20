@@ -1103,3 +1103,91 @@ var playerLives = [40, 40, 40, 40];
 
             }
         }
+
+        // --- Central Long-Press Menu Implementation ---
+        var centralMenuHoldTimer = null;
+        var centralMenuHoldThreshold = 400; // reduced ms to trigger menu (was 550)
+        var centralMenuOpen = false;
+        var centralMenuLastTapTime = 0; // for double-tap fallback
+
+        function openCentralMenu(){
+            var overlay = document.getElementById('centralMenuOverlay');
+            if(!overlay) { log('Central menu overlay not found'); return; }
+            addClass(overlay,'open');
+            centralMenuOpen = true;
+            log('Central menu opened');
+        }
+        function closeCentralMenu(){
+            var overlay = document.getElementById('centralMenuOverlay');
+            if(!overlay) return;
+            removeClass(overlay,'open');
+            centralMenuOpen = false;
+            log('Central menu closed');
+        }
+
+        function attachCentralMenuButtonEvents(){
+            var btn = document.getElementById('centralMenuButton');
+            if(!btn) { log('Central menu button not found'); return; }
+
+            function startHold(e){
+                if(centralMenuOpen) return; // already open
+                clearTimeout(centralMenuHoldTimer);
+                centralMenuHoldTimer = setTimeout(function(){ if(!centralMenuOpen) openCentralMenu(); }, centralMenuHoldThreshold);
+            }
+            function cancelHold(e){
+                clearTimeout(centralMenuHoldTimer);
+            }
+            // Touch
+            btn.addEventListener('touchstart', function(e){ startHold(e); }, false);
+            btn.addEventListener('touchend', function(e){ cancelHold(e); }, false);
+            btn.addEventListener('touchcancel', function(e){ cancelHold(e); }, false);
+            // Mouse (desktop/testing)
+            btn.addEventListener('mousedown', function(e){ startHold(e); }, false);
+            btn.addEventListener('mouseup', function(e){ cancelHold(e); }, false);
+            btn.addEventListener('mouseleave', function(e){ cancelHold(e); }, false);
+            // Click / double-tap fallback
+            btn.addEventListener('click', function(e){
+                // If hold already opened menu, ignore
+                if(centralMenuOpen) return;
+                var now = Date.now();
+                if(now - centralMenuLastTapTime < 450){
+                    openCentralMenu(); // double tap
+                }
+                centralMenuLastTapTime = now;
+            }, false);
+        }
+
+        // Decide starting player feature
+        function decideStartingPlayer(){
+            closeCentralMenu();
+            var aliveIndices = [];
+            for(var i=0;i<playersDead.length;i++){
+                if(!playersDead[i]) aliveIndices.push(i);
+            }
+            if(aliveIndices.length === 0){ log('No alive players to choose from'); return; }
+            var chosen = aliveIndices[Math.floor(Math.random()*aliveIndices.length)];
+            highlightStartingPlayer(chosen);
+        }
+
+        function highlightStartingPlayer(playerIndex){
+            try {
+                var ann = document.getElementById('startingPlayerAnnouncement');
+                if(!ann) return;
+                ann.textContent = 'Player ' + (playerIndex+1) + ' starts!';
+                addClass(ann,'show');
+                var playerDiv = document.getElementById('player'+playerIndex);
+                addClass(playerDiv,'starting-player-highlight');
+                addClass(playerDiv,'starting-player-highlight-fade');
+                setTimeout(function(){ removeClass(ann,'show'); }, 2600);
+                setTimeout(function(){ removeClass(playerDiv,'starting-player-highlight'); removeClass(playerDiv,'starting-player-highlight-fade'); }, 4000);
+            } catch(e) { log('Starting player highlight error: '+ e.message); }
+        }
+
+        // Extend window.onload to attach events (preserve existing onload logic)
+        (function(origOnLoad){
+            window.onload = function(){
+                if(typeof origOnLoad === 'function'){ origOnLoad(); }
+                attachCentralMenuButtonEvents();
+            };
+        })(window.onload);
+        // --- End Central Long-Press Menu Implementation ---
