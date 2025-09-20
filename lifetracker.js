@@ -120,9 +120,28 @@ var playerLives = [40, 40, 40, 40];
                 updateDynamicColorsStyle();
                 persistColors();
                 updateCustomColorPickerSelection(playerIndex);
+                updateCogIconColor(playerIndex); // adjust cog after color change
             } catch(e) {
                 console.log("Player color update error: " + e.message);
             }
+        }
+
+        function updateCogIconColor(playerIndex){
+            try {
+                var playerEl = document.getElementById('player'+playerIndex);
+                if(!playerEl) return;
+                // Sample mid color approximation (same as earlier shading logic)
+                var base = playerColors[playerIndex];
+                var contrast = contrastColor(base); // returns black or white
+                var cog = playerEl.querySelector('.arrow-indicator i');
+                if(!cog) return;
+                // If contrast is white we keep icon white; if black we darken icon for bright backgrounds
+                cog.style.color = contrast === '#FFFFFF' ? '#FFFFFF' : '#1b1f23';
+            } catch(e){ console.log('Cog color update error: '+ e.message); }
+        }
+
+        function updateAllCogIconColors(){
+            for(var i=0;i<playerColors.length;i++){ updateCogIconColor(i); }
         }
 
         // iOS 9.3.5 compatible custom color picker function
@@ -1219,6 +1238,7 @@ var playerLives = [40, 40, 40, 40];
                 if(typeof origOnLoad === 'function'){ origOnLoad(); }
                 attachCentralMenuButtonEvents();
                 enableMultiTouchLifeTaps(); // activate multi-touch tapping
+                updateAllCogIconColors(); // set initial cog colors
             };
         })(window.onload);
         // --- End Central Long-Press Menu Implementation ---
