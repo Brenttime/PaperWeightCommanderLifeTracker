@@ -1145,12 +1145,18 @@ var playerLives = [40, 40, 40, 40];
         var centralMenuHoldThreshold = 400; // reduced ms to trigger menu (was 550)
         var centralMenuOpen = false;
         var centralMenuLastTapTime = 0; // for double-tap fallback
+        var centralMenuSuppressNextClick = false; // suppress accidental selection after hold-open
+        var centralMenuOpenedByHold = false; // track if open originated from hold
 
         function openCentralMenu(){
             var overlay = document.getElementById('centralMenuOverlay');
             if(!overlay) { log('Central menu overlay not found'); return; }
             addClass(overlay,'open');
             centralMenuOpen = true;
+            if(centralMenuOpenedByHold){
+                centralMenuSuppressNextClick = true; // next tap/click will be ignored
+                centralMenuOpenedByHold = false; // reset flag
+            }
             log('Central menu opened');
         }
         function closeCentralMenu(){
@@ -1168,7 +1174,7 @@ var playerLives = [40, 40, 40, 40];
             function startHold(e){
                 if(centralMenuOpen) return; // already open
                 clearTimeout(centralMenuHoldTimer);
-                centralMenuHoldTimer = setTimeout(function(){ if(!centralMenuOpen) openCentralMenu(); }, centralMenuHoldThreshold);
+                centralMenuHoldTimer = setTimeout(function(){ if(!centralMenuOpen){ centralMenuOpenedByHold = true; openCentralMenu(); } }, centralMenuHoldThreshold);
             }
             function cancelHold(e){
                 clearTimeout(centralMenuHoldTimer);
@@ -1192,6 +1198,22 @@ var playerLives = [40, 40, 40, 40];
                 centralMenuLastTapTime = now;
             }, false);
         }
+
+        // Suppress first accidental tap/click after long-press open (capture phase)
+        document.addEventListener('touchend', function(e){
+            if(centralMenuOpen && centralMenuSuppressNextClick){
+                e.preventDefault();
+                e.stopPropagation();
+                centralMenuSuppressNextClick = false; // consume only once
+            }
+        }, true);
+        document.addEventListener('click', function(e){
+            if(centralMenuOpen && centralMenuSuppressNextClick){
+                e.preventDefault();
+                e.stopPropagation();
+                centralMenuSuppressNextClick = false; // consume only once
+            }
+        }, true);
 
         // Decide starting player feature
         function decideStartingPlayer(){
