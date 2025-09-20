@@ -1,5 +1,4 @@
-
-        var playerLives = [40, 40, 40, 40];
+var playerLives = [40, 40, 40, 40];
         var numberOfPlayers = playerLives.length;
         var commanderDamages = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]; // Array to track commander damage for each player against others
         var partnerCommanderDamages = [[[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]]]; // Array to track partner commander damage [targetPlayer][opponentIndex][partnerNumber]
@@ -10,6 +9,11 @@
         var partnerTapCounts = { plus: [[0, 0], [0, 0], [0, 0], [0, 0]], minus: [[0, 0], [0, 0], [0, 0], [0, 0]] };
         var tapTimeouts = { plus: [null, null, null, null], minus: [null, null, null, null] };
         var partnerTapTimeouts = { plus: [[null,null], [null,null], [null,null], [null,null]], minus: [[null,null], [null,null], [null,null], [null,null]] };
+        // --- New cumulative tap tracking (net up/down) ---
+        var tapNetAccum = [0,0,0,0];              // Net life (or commander dmg) change during visible window
+        var tapNetTimeouts = [null,null,null,null];
+        var tapNetElement = [null,null,null,null]; // Which element (+ or -) is currently used to display the net
+        // ------------------------------------------------
         var inCommanderDamageMode = false; // Track if any player is in commander damage mode
         var activePlayerPanel = -1; // Track which player's panel is slid out
 
@@ -622,28 +626,24 @@
 
             var isPlus = change > 0;
             var halfClass = divElement.classList.contains("top-half") ? "top-half" : "bottom-half";
-            var counterId = isPlus ? "tapCounter" + player + "Plus" : "tapCounter" + player + "Minus";
-            var counterElement = document.getElementById(counterId);
+            var plusEl = document.getElementById("tapCounter" + player + "Plus");
+            var minusEl = document.getElementById("tapCounter" + player + "Minus");
             var halfElement = document.querySelector("#player" + player + " ." + halfClass);
-            var tapType = isPlus ? "plus" : "minus";
             var playerLife = document.querySelector("#player" + player).querySelector(".life-total");
 
+            // Update life or commander damage
             if (!hasClass(playerLife, "disabled")) {
                 playerLives[player] += change;
                 document.getElementById("life" + player).textContent = playerLives[player];
-
-                // Check player status after life total change
-                checkPlayerStatus(player);
+                checkPlayerStatus(player); // life change
             }
             else {
-                log("Player " + fromPlayer + " has dealt commander damage to player " + player + " with change of " + change);
                 var commandDamage = document.querySelector("#player" + player).querySelector(".command-damage");
-                var totalCmdDamage = parseInt(commandDamage.textContent);
+                var totalCmdDamage = parseInt(commandDamage.textContent) || 0;
                 totalCmdDamage += change;
                 var cmdDamagePlayerLife = document.querySelector(".player.active-cmd-damage-div");
                 var cmdDamagePlayerNumber = cmdDamagePlayerLife.id[cmdDamagePlayerLife.id.length - 1];
 
-                // Update the commander damage for tracking
                 var targetPlayer = parseInt(cmdDamagePlayerNumber);
                 var fromPlayer = player;
                 var dmgIdx = (fromPlayer < targetPlayer) ? fromPlayer : fromPlayer - 1;
@@ -652,27 +652,57 @@
                 playerLives[cmdDamagePlayerNumber] += (change * -1);
                 document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
                 commandDamage.textContent = totalCmdDamage;
-
-                // Update boxes with current damage values
-                document.getElementById("life" + cmdDamagePlayerNumber).textContent = playerLives[cmdDamagePlayerNumber];
                 document.querySelector("#player" + cmdDamagePlayerNumber + " .damage-" + fromPlayer).textContent = totalCmdDamage;
-
-                // Check player status after commander damage and life change
                 checkPlayerStatus(cmdDamagePlayerNumber);
             }
 
-            tapCounts[tapType][player] += change;
-            counterElement.textContent = (isPlus ? "+" : "") + tapCounts[tapType][player];
-            addClass(counterElement, "show");
+            // --- Updated cumulative net counter logic (swap sides, hide zero) ---
+            if (tapNetTimeouts[player] === null) {
+                tapNetAccum[player] = 0; // reset at start of a new visible window
+                tapNetElement[player] = null; // will be chosen based on sign after applying change
+            }
 
+            tapNetAccum[player] += change;
+
+            // Decide what to display
+            if (tapNetAccum[player] === 0) {
+                // Hide both, keep timer running so further taps can revive display
+                removeClass(plusEl, "show");
+                removeClass(minusEl, "show");
+                tapNetElement[player] = null; // no active element while net is zero
+            } else {
+                var shouldBePlus = tapNetAccum[player] > 0;
+                var desiredEl = shouldBePlus ? plusEl : minusEl;
+
+                // If switching sides, hide the other and set new element
+                if (tapNetElement[player] !== desiredEl) {
+                    removeClass(plusEl, "show");
+                    removeClass(minusEl, "show");
+                    tapNetElement[player] = desiredEl;
+                }
+
+                // Show leading '+' for positive values
+                tapNetElement[player].textContent = tapNetAccum[player] > 0 ? ('+' + tapNetAccum[player]) : tapNetAccum[player];
+                addClass(tapNetElement[player], "show");
+            }
+
+            // Feedback flash on tapped half
             addClass(halfElement, "dimmed");
             setTimeout(function () { removeClass(halfElement, "dimmed"); }, 200);
 
-            clearTimeout(tapTimeouts[tapType][player]);
-            tapTimeouts[tapType][player] = setTimeout(function () {
-                tapCounts[tapType][player] = 0;
-                removeClass(counterElement, "show");
+            // Maintain / extend timeout window
+            if (tapNetTimeouts[player] !== null) {
+                clearTimeout(tapNetTimeouts[player]);
+            }
+            tapNetTimeouts[player] = setTimeout(function() {
+                removeClass(plusEl, "show");
+                removeClass(minusEl, "show");
+                tapNetAccum[player] = 0;
+                tapNetElement[player] = null;
+                plusEl.textContent = "+1";
+                minusEl.textContent = "-1";
             }, 2000);
+            // --- End updated logic ---
         }
 
         function updateCommanderDamageBoxes(targetPlayer) {
