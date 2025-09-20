@@ -37,25 +37,42 @@ var playerLives = [40, 40, 40, 40];
         }
 
         function contrastColor(hex) {
-            // Determine whether black or white text has better WCAG contrast against the given background.
-            // Returns '#000000' for light backgrounds (so text is black) and '#FFFFFF' for dark ones.
+            // Determine high-contrast foreground (white or near-black) for the given background.
+            // Original pure WCAG ratio comparison tended to prefer black for some medium-dark saturated colors
+            // (e.g. #da3633) because their luminance made black *slightly* higher ratio, even though white
+            // is visually clearer. We introduce a luminance bias threshold so more "dark-ish" colors use white.
             hex = hex.replace('#','');
-            if (hex.length === 3) { hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]; }
-            var r = parseInt(hex.substring(0,2),16) / 255;
-            var g = parseInt(hex.substring(2,4),16) / 255;
-            var b = parseInt(hex.substring(4,6),16) / 255;
-
-            // Linearize sRGB
-            function lin(c){ return (c <= 0.03928) ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); }
+            if (hex.length === 3) {
+                hex = hex.charAt(0)+hex.charAt(0)+hex.charAt(1)+hex.charAt(1)+hex.charAt(2)+hex.charAt(2);
+            }
+            var r8 = parseInt(hex.substring(0,2),16);
+            var g8 = parseInt(hex.substring(2,4),16);
+            var b8 = parseInt(hex.substring(4,6),16);
+            var r = r8 / 255;
+            var g = g8 / 255;
+            var b = b8 / 255;
+            function lin(c){ return (c <= 0.04045) ? (c/12.92) : Math.pow((c+0.055)/1.055, 2.4); }
             var R = lin(r), G = lin(g), B = lin(b);
-            var L = 0.2126*R + 0.7152*G + 0.0722*B; // Relative luminance
+            var L = 0.2126*R + 0.7152*G + 0.0722*B; // Relative luminance (0 = dark, 1 = light)
 
-            // Contrast ratio with white & black per WCAG: (L1 + 0.05) / (L2 + 0.05)
+            // Bias threshold: any background with luminance <= switch uses white text.
+            // Adjust L_SWITCH to tune aggressiveness (lower = fewer whites, higher = more whites).
+            // 0.50 chosen after testing to keep white on saturated reds / blues / greens while still
+            // using dark text on very bright backgrounds (light pastels, yellows, etc.).
+            var L_SWITCH = 0.50;
+            if (L <= L_SWITCH) {
+                return '#FFFFFF';
+            }
+
+            // For lighter backgrounds, fall back to contrast ratio comparison to ensure readability.
             var contrastWhite = (1.0 + 0.05) / (L + 0.05);
-            var contrastBlack = (L + 0.05) / (0 + 0.05);
+            var contrastBlack = (L + 0.05) / 0.05; // (0 + 0.05)
 
-            // Pick color giving higher ratio; tie goes to black (better on very light tones)
-            return (contrastBlack >= contrastWhite) ? '#000000' : '#FFFFFF';
+            // If white is dramatically better (can happen near the threshold), still allow it.
+            if (contrastWhite - contrastBlack > 1.0) {
+                return '#FFFFFF';
+            }
+            return '#000000';
         }
 
         function persistColors() {
