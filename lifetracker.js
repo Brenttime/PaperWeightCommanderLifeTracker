@@ -1224,7 +1224,6 @@ var playerLives = [40, 40, 40, 40];
             window.onload = function(){
                 if(typeof origOnLoad === 'function'){ origOnLoad(); }
                 attachCentralMenuButtonEvents();
-                enableMultiTouchLifeTaps(); // activate multi-touch tapping
                 updateAllCogIconColors(); // set initial cog colors
             };
         })(window.onload);
