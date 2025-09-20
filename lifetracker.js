@@ -1219,12 +1219,123 @@ var playerLives = [40, 40, 40, 40];
             } catch(e) { log('Starting player highlight error: '+ e.message); }
         }
 
+        // --- Hold to Jump (+/-10) Implementation ---
+        // Helper (iOS 9.3.5 friendly) to find ancestor with a class
+        function findParentWithClass(el, className){
+            while(el && el !== document){
+                if(hasClass(el, className)) return el;
+                el = el.parentNode;
+            }
+            return null;
+        }
+
+        function setupHoldToJump(){
+            try {
+                var halves = document.querySelectorAll('.half.basic-commander');
+                for(var i=0;i<halves.length;i++){
+                    (function(half){
+                        var playerEl = findParentWithClass(half, 'player');
+                        if(!playerEl || !playerEl.id) return;
+                        var playerIdx = parseInt(playerEl.id.replace('player',''),10);
+                        if(isNaN(playerIdx)) return;
+
+                        var baseChange = half.querySelector('.plus') ? 1 : -1;
+                        if(half.getAttribute('onclick')){ half.removeAttribute('onclick'); }
+
+                        var holdTimer = null;        // timeout for initial long-press
+                        var repeatTimer = null;      // timeout for subsequent repeats
+                        var holdThreshold = 550;     // ms before first +/-10
+                        var repeatDelay = 750;       // ms between subsequent repeats (further slowed)
+                        half._longPressTriggered = false;
+                        half._lastTouchTime = 0;
+
+                        function applyJump(){
+                            tapLife(playerIdx, baseChange * 10, half);
+                        }
+                        function scheduleNextRepeat(){
+                            repeatTimer = setTimeout(function(){
+                                // Only continue if still pressed (long press active)
+                                if(half._longPressTriggered){
+                                    applyJump();
+                                    scheduleNextRepeat();
+                                }
+                            }, repeatDelay);
+                        }
+                        function clearAllTimers(){
+                            if(holdTimer){ clearTimeout(holdTimer); holdTimer = null; }
+                            if(repeatTimer){ clearTimeout(repeatTimer); repeatTimer = null; }
+                        }
+                        function triggerLongPress(){
+                            applyJump();
+                            half._longPressTriggered = true;
+                            scheduleNextRepeat();
+                        }
+                        function startHold(e){
+                            if(inCommanderDamageMode) return; // respect mode lock
+                            clearAllTimers();
+                            half._longPressTriggered = false;
+                            holdTimer = setTimeout(function(){ triggerLongPress(); }, holdThreshold);
+                        }
+                        function endHold(e){
+                            clearAllTimers();
+                            half._longPressTriggered = false; // stop further repeats
+                        }
+
+                        // Touch handlers
+                        half.addEventListener('touchstart', function(e){ startHold(e); }, false);
+                        half.addEventListener('touchend', function(e){
+                            var wasLong = half._longPressTriggered; // capture before reset in endHold
+                            endHold(e);
+                            if(wasLong){
+                                e.preventDefault();
+                            } else {
+                                tapLife(playerIdx, baseChange, half); // normal single increment
+                                half._lastTouchTime = Date.now();
+                                e.preventDefault(); // avoid synthetic click
+                            }
+                        }, false);
+                        half.addEventListener('touchcancel', function(e){ endHold(e); }, false);
+
+                        // Mouse handlers
+                        half.addEventListener('mousedown', function(e){ startHold(e); }, false);
+                        half.addEventListener('mouseup', function(e){
+                            var wasLong = half._longPressTriggered;
+                            endHold(e);
+                            if(wasLong){
+                                e.preventDefault();
+                            } else {
+                                tapLife(playerIdx, baseChange, half);
+                            }
+                        }, false);
+                        half.addEventListener('mouseleave', function(e){ endHold(e); }, false);
+
+                        // Fallback click (desktop) if neither path consumed it
+                        half.addEventListener('click', function(e){
+                            var now = Date.now();
+                            if(half._longPressTriggered){
+                                e.preventDefault();
+                                return;
+                            }
+                            if(half._lastTouchTime && (now - half._lastTouchTime) < 700){
+                                e.preventDefault();
+                                return; // synthetic after touch
+                            }
+                            tapLife(playerIdx, baseChange, half);
+                        }, false);
+                    })(halves[i]);
+                }
+                log('Hold-to-jump life adjustment initialized');
+            } catch(e){ log('Hold-to-jump setup error: ' + e.message); }
+        }
+        // --- End Hold to Jump Implementation ---
+
         // Extend window.onload to attach events (preserve existing onload logic)
         (function(origOnLoad){
             window.onload = function(){
                 if(typeof origOnLoad === 'function'){ origOnLoad(); }
                 attachCentralMenuButtonEvents();
                 updateAllCogIconColors(); // set initial cog colors
+                setupHoldToJump(); // enable long-press +/-10
             };
         })(window.onload);
         // --- End Central Long-Press Menu Implementation ---
