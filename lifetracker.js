@@ -1319,7 +1319,7 @@ var playerLives = [40, 40, 40, 40];
                         half.addEventListener('touchcancel', function(e){ endHold(e); }, false);
 
                         // Mouse handlers
-                        half.addEventListener('mousedown', function(e){ startHold(e); }, false);
+                        half.addEventListener('mousedown', function(e){ startHold(e); half._mouseAppliedAt = 0; half._mouseUpFired = false; }, false);
                         half.addEventListener('mouseup', function(e){
                             var wasLong = half._longPressTriggered;
                             endHold(e);
@@ -1327,6 +1327,8 @@ var playerLives = [40, 40, 40, 40];
                                 e.preventDefault();
                             } else {
                                 tapLife(playerIdx, baseChange, half);
+                                half._mouseAppliedAt = Date.now();
+                                half._mouseUpFired = true;
                             }
                         }, false);
                         half.addEventListener('mouseleave', function(e){ endHold(e); }, false);
@@ -1335,6 +1337,11 @@ var playerLives = [40, 40, 40, 40];
                         half.addEventListener('click', function(e){
                             var now = Date.now();
                             if(half._longPressTriggered){
+                                e.preventDefault();
+                                return;
+                            }
+                            // Suppress if mouseup already handled the increment very recently
+                            if(half._mouseUpFired && half._mouseAppliedAt && (now - half._mouseAppliedAt) < 500){
                                 e.preventDefault();
                                 return;
                             }
