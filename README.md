@@ -4,6 +4,8 @@ A touch-first, browser-based life tracker for Magic: The Gathering Commander (ED
 
 Inspired by apps like LifeTap, but designed to work where those apps can't.
 
+Hosted @ https://lifetracker.omenpath.org/
+
 ---
 
 ## Why This Exists
@@ -43,3 +45,4 @@ For iPad use: host the file on a local server or serve it from any static host (
 There is no bundler, no framework, and no runtime dependencies beyond Font Awesome (loaded via CDN for icons).
 
 ---
+
