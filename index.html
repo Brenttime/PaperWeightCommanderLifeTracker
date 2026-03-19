@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.0/css/all.min.css" integrity="sha512-UJqci0ZyYcQ0AOJkcIkUCxLS2L6eNcOr7ZiypuInvEhO9uqIDi349MEFrqBzoy1QlfcjfURHl+WTMjEdWcv67A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-        <title>Commander Life Tracker</title>
+        <title>Paper Weight Commander Life Tracker</title>
         <style>
             
             * {
@@ -101,12 +101,23 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
                 display: flex;
+                -webkit-flex-direction: column;
                 flex-direction: column;
+                -webkit-justify-content: center;
                 justify-content: center;
+                -webkit-align-items: center;
                 align-items: center;
                 z-index: 5;
                 color: white;
+                overflow-y: auto;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+                padding: 4px 6px;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
             }
 
             .settings-panel.top-left {
@@ -137,13 +148,19 @@
             .setting-btn {
                 background-color: #21262d;
                 color: #f0f6fc;
-                padding: 10px 15px;
-                border-radius: 5px;
+                padding: 5px 10px;
+                border-radius: 6px;
                 cursor: pointer;
                 text-align: center;
-                min-width: 160px;
-                margin-bottom: 2px;
+                width: 140px;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                margin-bottom: 3px;
                 border: 1px solid #30363d;
+                font-size: 0.78em;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .setting-btn:hover {
@@ -161,55 +178,64 @@
 
             /* New poison counter container */
             .poison-counter-container {
+                display: -webkit-box;
+                display: -webkit-flex;
                 display: flex;
+                -webkit-align-items: center;
                 align-items: center;
                 background-color: #21262d;
                 border: 1px solid #30363d;
-                border-radius: 5px;
-                padding: 5px 10px;
-                min-width: 160px;
+                border-radius: 4px;
+                padding: 3px 6px;
+                width: 140px;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                -webkit-justify-content: space-between;
                 justify-content: space-between;
+                margin-bottom: 3px;
             }
 
             /* Poison counter arrows */
             .poison-arrow {
                 color: #f0f6fc;
                 cursor: pointer;
-                font-size: 18px;
-                padding: 5px;
-                width: 30px;
-                height: 30px;
+                font-size: 14px;
+                width: 24px;
+                height: 24px;
+                display: -webkit-box;
+                display: -webkit-flex;
                 display: flex;
+                -webkit-align-items: center;
                 align-items: center;
+                -webkit-justify-content: center;
                 justify-content: center;
                 background-color: #161b22;
                 border-radius: 50%;
-                transition: background-color 0.2s;
-            }
-
-            .poison-arrow:hover {
-                background-color: #30363d;
             }
 
             /* Poison counter display */
             .poison-display {
+                display: -webkit-box;
+                display: -webkit-flex;
                 display: flex;
-                flex-direction: column;
+                -webkit-flex-direction: row;
+                flex-direction: row;
+                -webkit-align-items: center;
                 align-items: center;
+                -webkit-justify-content: center;
                 justify-content: center;
-                padding: 0 10px;
+                padding: 0 4px;
+                gap: 4px;
             }
 
             .poison-value {
-                font-size: 1.4em;
+                font-size: 1em;
                 font-weight: bold;
-                margin-bottom: 2px;
             }
 
             .poison-symbol {
-                font-size: 0.9em;
+                font-size: 0.75em;
                 color: #7c3aed;
-                /* Dark mode poison purple */
             }
 
             /* Poison indicator on main screen */
@@ -684,10 +710,7 @@
                 opacity: 1;
             }
 
-            /* New styles for the death feature */
             .player-dead {
-                /*background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
-                background-image: linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);*/
                 box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 8px rgba(0, 0, 0, 0.5);
             }
 
@@ -699,25 +722,19 @@
                 top: 50%;
                 left: 50%;
                 display: none;
-                /* Hide by default */
             }
 
-            .player0 .skull,
-            .player2 .skull {
+            .player0 .skull, .player2 .skull {
                 -webkit-transform: translate(-50%, -50%) rotate(90deg);
                 transform: translate(-50%, -50%) rotate(90deg);
             }
 
-            .player1 .skull,
-            .player3 .skull {
+            .player1 .skull, .player3 .skull {
                 -webkit-transform: translate(-50%, -50%) rotate(-90deg);
                 transform: translate(-50%, -50%) rotate(-90deg);
             }
 
-            /* Hide life total when player is dead */
-            .player-dead .life-total {
-                display: none;
-            }
+            .player-dead .life-total { display: none; }
 
             .partner-split-container {
                 display: -webkit-box;
@@ -943,69 +960,66 @@
 
             /* Color picker specific tweaks */
             .color-setting {
-                display: flex !important;
-                /*
+                display: -webkit-box;
+                display: -webkit-flex;
                 display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 8px;
-                /*flex-direction: column;
-                padding: 8px 15px;*/
+                -webkit-flex-direction: column;
+                flex-direction: column;
+                -webkit-align-items: flex-start;
+                align-items: flex-start;
+                width: 140px;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
             }
 
             .color-setting input[type="color"] {
-                width: 42px;
-                height: 32px;
+                width: 32px;
+                height: 20px;
                 padding: 0;
                 border: none;
                 background: none;
                 cursor: pointer;
             }
 
-            .color-setting span {
-                font-size: 0.9em;
-                text-align: center;
-                margin-bottom: 8px;
-            }
+            /* Hide the "Player Color" text label — space is too precious */
+            .color-setting span { display: none; }
 
-            /* Custom color picker for iOS 9.3.5 compatibility */
+            /* Custom color picker — 6-column flex grid, iOS 9.3.5 compatible */
             .custom-color-picker {
+                display: -webkit-box;
+                display: -webkit-flex;
                 display: flex;
-                grid-template-columns: repeat(8, 1fr);
-                gap: 4px;
-                width: 100%;
-                margin-top: 5px;
-                padding: 0 5px;
+                -webkit-flex-wrap: wrap;
+                flex-wrap: wrap;
+                width: 140px;
+                padding: 2px;
+                background: rgba(0,0,0,0.15);
+                border-radius: 4px;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
             }
 
             .color-option {
-                width: 26px;
-                height: 26px;
-                border-radius: 4px;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                width: 19px;
+                height: 19px;
+                border-radius: 3px;
                 cursor: pointer;
                 border: 2px solid transparent;
-                transition: all 0.2s;
-                margin: 0 auto;
-            }
-
-            .color-option:hover {
-                transform: scale(1.1);
+                margin: 1px;
+                -webkit-flex-shrink: 0;
+                flex-shrink: 0;
             }
 
             .color-option.selected {
                 border-color: #fff;
-                box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
-                transform: scale(1.1);
+                box-shadow: 0 0 0 1px rgba(255,255,255,0.4);
             }
 
-            /* Hide HTML5 color input on iOS (fallback) */
+            /* Hide HTML5 color input on iOS */
             @supports (-webkit-overflow-scrolling: touch) {
-                .color-setting input[type="color"] {
-                    display: none;
-                }
-                .custom-color-picker {
-                    display: grid;
-                }
+                .color-setting input[type="color"] { display: none; }
             }
 
             /* --- Central Long-Press Menu Additions --- */
@@ -1122,298 +1136,208 @@
             @keyframes ringPulse { 0% { opacity:.9; -webkit-transform: scale(.80); transform: scale(.80); } 100% { opacity:0; -webkit-transform: scale(1.35); transform: scale(1.35); } }
             /* --- End enhanced starting player highlight styles --- */
             /* --- End Central Menu Additions --- */
+
+            /* New posClass: bottom-full (3-A P3, 0° player at south) */
+            .player-container.bottom-full .arrow-indicator {
+                top: 0px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%);
+                min-width: 44px; min-height: 44px;
+            }
+            .settings-panel.bottom-full {
+                top: 0; left: 0; width: 100%; height: 100%;
+                -webkit-flex-direction: row; flex-direction: row;
+                -webkit-flex-wrap: wrap; flex-wrap: wrap;
+                -webkit-justify-content: center; justify-content: center;
+                -webkit-align-items: center; align-items: center;
+                -webkit-transform: none; transform: none;
+            }
+
+            /* New posClass: left-full (3-B left, 90°) */
+            .player-container.left-full .arrow-indicator {
+                right: 0px; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%);
+            }
+            .settings-panel.left-full {
+                top: 0; left: 30px; -webkit-transform: rotate(90deg); transform: rotate(90deg);
+            }
+
+            /* New posClass: right-full (3-B right, -90°) */
+            .player-container.right-full .arrow-indicator {
+                left: 0px; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%);
+            }
+            .settings-panel.right-full {
+                top: 0; left: -30px; -webkit-transform: rotate(-90deg); transform: rotate(-90deg);
+            }
+
+            /* New posClass: center-full (3-B center, 0°) */
+            .player-container.center-full .arrow-indicator {
+                bottom: 0px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%);
+                min-width: 44px; min-height: 44px;
+            }
+            .settings-panel.center-full {
+                top: 0; left: 0; width: 100%; height: 100%;
+                -webkit-flex-direction: row; flex-direction: row;
+                -webkit-flex-wrap: wrap; flex-wrap: wrap;
+                -webkit-justify-content: center; justify-content: center;
+                -webkit-align-items: center; align-items: center;
+                -webkit-transform: none; transform: none;
+            }
+
+            /* New posClass: top-center (6-A P2, 180°) */
+            .player-container.top-center .arrow-indicator {
+                bottom: 0px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%);
+                min-width: 44px; min-height: 44px;
+            }
+            .settings-panel.top-center {
+                bottom: 0; left: 0; width: 100%; height: 100%;
+                -webkit-flex-direction: row; flex-direction: row;
+                -webkit-flex-wrap: wrap; flex-wrap: wrap;
+                -webkit-justify-content: center; justify-content: center;
+                -webkit-align-items: center; align-items: center;
+                -webkit-transform: rotate(180deg); transform: rotate(180deg);
+            }
+
+            /* New posClass: bottom-center (6-A P5, 0°) */
+            .player-container.bottom-center .arrow-indicator {
+                top: 0px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%);
+                min-width: 44px; min-height: 44px;
+            }
+            .settings-panel.bottom-center {
+                top: 0; left: 0; width: 100%; height: 100%;
+                -webkit-flex-direction: row; flex-direction: row;
+                -webkit-flex-wrap: wrap; flex-wrap: wrap;
+                -webkit-justify-content: center; justify-content: center;
+                -webkit-align-items: center; align-items: center;
+                -webkit-transform: none; transform: none;
+            }
+
+            /* Setup Screen */
+            .setup-overlay {
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: #0d1117;
+                z-index: 500;
+                display: -webkit-box; display: -webkit-flex; display: flex;
+                -webkit-box-align: center; -webkit-align-items: center; align-items: center;
+                -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center;
+            }
+            .setup-dialog {
+                width: 88%;
+                max-width: 380px;
+                background: #161b22;
+                border: 1px solid #30363d;
+                border-radius: 14px;
+                padding: 22px 18px 18px 18px;
+            }
+            .setup-title {
+                font-size: 1.25em;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 22px;
+                color: #f0f6fc;
+                letter-spacing: 0.5px;
+            }
+            .setup-section-label {
+                font-size: 0.8em;
+                color: #8b949e;
+                margin-bottom: 8px;
+                margin-top: 18px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .setup-count-btns {
+                display: -webkit-box; display: -webkit-flex; display: flex;
+            }
+            .setup-count-btn {
+                -webkit-box-flex: 1; -webkit-flex: 1 1 0%; flex: 1 1 0%;
+                background: #21262d;
+                color: #f0f6fc;
+                border: 1px solid #30363d;
+                border-radius: 8px;
+                padding: 12px 0;
+                text-align: center;
+                cursor: pointer;
+                font-size: 1.2em;
+                font-weight: bold;
+                margin-right: 8px;
+                -webkit-user-select: none; user-select: none;
+            }
+            .setup-count-btn:last-child { margin-right: 0; }
+            .setup-count-btn.setup-btn-active {
+                background: #1f6feb;
+                border-color: #388bfd;
+            }
+            .setup-layout-btns {
+                display: -webkit-box; display: -webkit-flex; display: flex;
+                -webkit-flex-wrap: wrap; flex-wrap: wrap;
+            }
+            .setup-layout-btn {
+                background: #21262d;
+                color: #f0f6fc;
+                border: 1px solid #30363d;
+                border-radius: 8px;
+                padding: 10px 14px;
+                margin: 0 8px 8px 0;
+                text-align: center;
+                cursor: pointer;
+                font-size: 0.95em;
+                -webkit-user-select: none; user-select: none;
+                min-width: 100px;
+            }
+            .setup-layout-btn.setup-btn-active {
+                background: #1f6feb;
+                border-color: #388bfd;
+            }
+            .setup-start-btn {
+                display: block;
+                width: 100%;
+                background: #238636;
+                color: #f0f6fc;
+                border: 1px solid #2ea043;
+                border-radius: 8px;
+                padding: 14px 0;
+                text-align: center;
+                cursor: pointer;
+                font-size: 1.1em;
+                font-weight: bold;
+                margin-top: 22px;
+                -webkit-box-sizing: border-box; box-sizing: border-box;
+                -webkit-user-select: none; user-select: none;
+            }
+            .setup-start-btn:active { background: #2ea043; }
         </style>
     </head>
     <body>
         <div class="grid-container" id="gridContainer">
-            <!-- Player 1 Container (top-left) -->
-            <div class="player-container top-left" id="container0">
-                <div class="settings-panel top-left">
-                    <div class="setting-btn" onclick="resetPlayerLife(0)">Reset Life</div>
-                    <div class="setting-btn" onclick="resetCommanderDamage(0)">Reset Cmd DMG</div>
-                    <div class="setting-btn partner-toggle" id="partnerToggle0" onclick="togglePartnerMode(0)">Partner Mode:
-                        OFF</div>
-
-                    <!-- New Poison Counter Control -->
-                    <div class="poison-counter-container">
-                        <div class="poison-arrow" onclick="adjustPoisonCounter(0, -1)">−</div>
-                        <div class="poison-display">
-                            <div class="poison-value" id="poison-value-0">0</div>
-                            <div class="poison-symbol"><i class="fas fa-skull"></i></div>
-                        </div>
-                        <div class="poison-arrow" onclick="adjustPoisonCounter(0, 1)">+</div>
-                    </div>
-
-                    <!-- Color picker moved to bottom -->
-                    <div class="setting-btn color-setting">
-                        <span>Player Color</span>
-                        <input type="color" id="colorPicker0" onchange="updatePlayerColor(0, this.value)" />
-                        <div class="custom-color-picker" id="customColorPicker0">
-                            <div class="color-option" style="background-color: #da3633;" data-color="#da3633"></div>
-                            <div class="color-option" style="background-color: #238636;" data-color="#238636"></div>
-                            <div class="color-option" style="background-color: #1f6feb;" data-color="#1f6feb"></div>
-                            <div class="color-option" style="background-color: #fb8500;" data-color="#fb8500"></div>
-                            <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
-                            <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
-                            <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
-                            <div class="color-option" style="background-color: #84cc16;" data-color="#84cc16"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="player player0" id="player0">
-                    <div class="arrow-indicator"><i class="fa fa-cog"></i></div>
-                    <div class="command-damage disabled damage-0">▶️ Click to Exit</div>
-                    <div class="life-total" id="life0">40</div>
-                    <div class="skull" id="skull0"><i class="fas fa-skull"></i></div>
-                    <div class="poison-indicator" id="poison-indicator-0">0 <i class="fas fa-skull"></i></div>
-
-                    <div class="half top-half basic-commander" onclick="tapLife(0, -1, this)">
-                        <div class="minus">-</div>
-                        <div class="tap-counter" id="tapCounter0Minus">-1</div>
-                    </div>
-                    <div class="half bottom-half basic-commander" onclick="tapLife(0, 1, this)">
-                        <div class="plus">+</div>
-                        <div class="tap-counter" id="tapCounter0Plus">+1</div>
-                    </div>
-
-                    <div class="commander-damage-container" id="commander-damage-container0">
-                        <div>
-                            <div class="commander-damage-box damage-1 enemy-partner-0" onclick="adjustCommanderDamage(0)">0</div>
-                            <div class="commander-damage-box damage-1 partner enemy-partner-1" onclick="adjustCommanderDamage(0)"
-                                style="display: none;">0</div>
-                        </div>
-                        <div>
-                            <div class="commander-damage-box damage-2 enemy-partner-0" onclick="adjustCommanderDamage(0)">0</div>
-                            <div class="commander-damage-box damage-2 partner enemy-partner-1" onclick="adjustCommanderDamage(0)"
-                                style="display: none;">0</div>
-                        </div>
-                        <div>
-                            <div class="commander-damage-box damage-3 enemy-partner-0" onclick="adjustCommanderDamage(0)">0</div>
-                            <div class="commander-damage-box damage-3 partner enemy-partner-1" onclick="adjustCommanderDamage(0)"
-                                style="display: none;">0</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Player 2 Container (top-right) -->
-            <div class="player-container top-right" id="container1">
-                <div class="settings-panel top-right">
-                    <div class="setting-btn" onclick="resetPlayerLife(1)">Reset Life</div>
-                    <div class="setting-btn" onclick="resetCommanderDamage(1)">Reset Cmd DMG</div>
-                    <div class="setting-btn partner-toggle" id="partnerToggle1" onclick="togglePartnerMode(1)">Partner Mode:
-                        OFF</div>
-
-                    <!-- New Poison Counter Control -->
-                    <div class="poison-counter-container">
-                        <div class="poison-arrow" onclick="adjustPoisonCounter(1, -1)">−</div>
-                        <div class="poison-display">
-                            <div class="poison-value" id="poison-value-1">0</div>
-                            <div class="poison-symbol"><i class="fas fa-skull"></i></div>
-                        </div>
-                        <div class="poison-arrow" onclick="adjustPoisonCounter(1, 1)">+</div>
-                    </div>
-
-                    <!-- Color picker moved to bottom -->
-                    <div class="setting-btn color-setting">
-                        <span>Player Color</span>
-                        <input type="color" id="colorPicker1" onchange="updatePlayerColor(1, this.value)" />
-                        <div class="custom-color-picker" id="customColorPicker1">
-                            <div class="color-option" style="background-color: #da3633;" data-color="#da3633"></div>
-                            <div class="color-option" style="background-color: #238636;" data-color="#238636"></div>
-                            <div class="color-option" style="background-color: #1f6feb;" data-color="#1f6feb"></div>
-                            <div class="color-option" style="background-color: #fb8500;" data-color="#fb8500"></div>
-                            <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
-                            <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
-                            <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
-                            <div class="color-option" style="background-color: #84cc16;" data-color="#84cc16"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="player player1" id="player1">
-                    <div class="arrow-indicator"><i class="fa fa-cog"></i></div>
-                    <div class="command-damage disabled damage-1">▶️ Click to Exit</div>
-                    <div class="life-total" id="life1">40</div>
-                    <div class="skull" id="skull1"><i class="fas fa-skull"></i></div>
-                    <div class="poison-indicator" id="poison-indicator-1">0<i class="fas fa-skull"></i></div>
-                    <div class="half top-half basic-commander" onclick="tapLife(1, 1, this)">
-                        <div class="plus">+</div>
-                        <div class="tap-counter" id="tapCounter1Plus">+1</div>
-                    </div>
-                    <div class="half bottom-half basic-commander" onclick="tapLife(1, -1, this)">
-                        <div class="minus">-</div>
-                        <div class="tap-counter" id="tapCounter1Minus">-1</div>
-                    </div>
-
-                    <div class="commander-damage-container" id="commander-damage-container1">
-                        <div>
-                            <div class="commander-damage-box damage-0 enemy-partner-0" onclick="adjustCommanderDamage(1)">0</div>
-                            <div class="commander-damage-box damage-0 partner enemy-partner-1" onclick="adjustCommanderDamage(1)"
-                                style="display: none;">0</div>
-                        </div>
-                        <div>
-                            <div class="commander-damage-box damage-2 enemy-partner-0" onclick="adjustCommanderDamage(1)">0</div>
-                            <div class="commander-damage-box damage-2 partner enemy-partner-1" onclick="adjustCommanderDamage(1)"
-                                style="display: none;">0</div>
-                        </div>
-                        <div>
-                            <div class="commander-damage-box damage-3 enemy-partner-0" onclick="adjustCommanderDamage(1)">0</div>
-                            <div class="commander-damage-box damage-3 partner enemy-partner-1" onclick="adjustCommanderDamage(1)"
-                                style="display: none;">0</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Player 3 Container (bottom-left) -->
-            <div class="player-container bottom-left" id="container2">
-                <div class="settings-panel bottom-left">
-                    <div class="setting-btn" onclick="resetPlayerLife(2)">Reset Life</div>
-                    <div class="setting-btn" onclick="resetCommanderDamage(2)">Reset Cmd DMG</div>
-                    <div class="setting-btn partner-toggle" id="partnerToggle2" onclick="togglePartnerMode(2)">Partner Mode:
-                        OFF</div>
-
-                    <!-- New Poison Counter Control -->
-                    <div class="poison-counter-container">
-                        <div class="poison-arrow" onclick="adjustPoisonCounter(2, -1)">−</div>
-                        <div class="poison-display">
-                            <div class="poison-value" id="poison-value-2">0</div>
-                            <div class="poison-symbol"><i class="fas fa-skull"></i></div>
-                        </div>
-                        <div class="poison-arrow" onclick="adjustPoisonCounter(2, 1)">+</div>
-                    </div>
-
-                    <!-- Color picker moved to bottom -->
-                    <div class="setting-btn color-setting">
-                        <span>Player Color</span>
-                        <input type="color" id="colorPicker2" onchange="updatePlayerColor(2, this.value)" />
-                        <div class="custom-color-picker" id="customColorPicker2">
-                            <div class="color-option" style="background-color: #da3633;" data-color="#da3633"></div>
-                            <div class="color-option" style="background-color: #238636;" data-color="#238636"></div>
-                            <div class="color-option" style="background-color: #1f6feb;" data-color="#1f6feb"></div>
-                            <div class="color-option" style="background-color: #fb8500;" data-color="#fb8500"></div>
-                            <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
-                            <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
-                            <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
-                            <div class="color-option" style="background-color: #84cc16;" data-color="#84cc16"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="player player2" id="player2">
-                    <div class="arrow-indicator"><i class="fa fa-cog"></i></div>
-                    <div class="command-damage disabled damage-2">▶️ Click to Exit</div>
-                    <div class="life-total" id="life2">40</div>
-                    <div class="skull" id="skull2"><i class="fas fa-skull"></i></div>
-                    <div class="poison-indicator" id="poison-indicator-2">0 <i class="fas fa-skull"></i></div>
-                    <div class="half top-half basic-commander" onclick="tapLife(2, -1, this)">
-                        <div class="minus">-</div>
-                        <div class="tap-counter" id="tapCounter2Minus">-1</div>
-                    </div>
-                    <div class="half bottom-half basic-commander" onclick="tapLife(2, 1, this)">
-                        <div class="plus">+</div>
-                        <div class="tap-counter" id="tapCounter2Plus">+1</div>
-                    </div>
-
-                    <div class="commander-damage-container" id="commander-damage-container2">
-                        <div>
-                            <div class="commander-damage-box damage-0 enemy-partner-0" onclick="adjustCommanderDamage(2)">0</div>
-                            <div class="commander-damage-box damage-0 partner enemy-partner-1" onclick="adjustCommanderDamage(2)"
-                                style="display: none;">0</div>
-                        </div>
-                        <div>
-                            <div class="commander-damage-box damage-1 enemy-partner-0" onclick="adjustCommanderDamage(2)">0</div>
-                            <div class="commander-damage-box damage-1 partner enemy-partner-1" onclick="adjustCommanderDamage(2)"
-                                style="display: none;">0</div>
-                        </div>
-                        <div>
-                            <div class="commander-damage-box damage-3 enemy-partner-0" onclick="adjustCommanderDamage(2)">0</div>
-                            <div class="commander-damage-box damage-3 partner enemy-partner-1" onclick="adjustCommanderDamage(2)"
-                                style="display: none;">0</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Player 4 Container (bottom-right) -->
-            <div class="player-container bottom-right" id="container3">
-                <div class="settings-panel bottom-right">
-                    <div class="setting-btn" onclick="resetPlayerLife(3)">Reset Life</div>
-                    <div class="setting-btn" onclick="resetCommanderDamage(3)">Reset Cmd DMG</div>
-                    <div class="setting-btn partner-toggle" id="partnerToggle3" onclick="togglePartnerMode(3)">Partner Mode:
-                        OFF</div>
-
-                    <!-- New Poison Counter Control -->
-                    <div class="poison-counter-container">
-                        <div class="poison-arrow" onclick="adjustPoisonCounter(3, -1)">−</div>
-                        <div class="poison-display">
-                            <div class="poison-value" id="poison-value-3">0</div>
-                            <div class="poison-symbol"><i class="fas fa-skull"></i></div>
-                        </div>
-                        <div class="poison-arrow" onclick="adjustPoisonCounter(3, 1)">+</div>
-                    </div>
-
-                    <!-- Color picker moved to bottom -->
-                    <div class="setting-btn color-setting">
-                        <span>Player Color</span>
-                        <input type="color" id="colorPicker3" onchange="updatePlayerColor(3, this.value)" />
-                        <div class="custom-color-picker" id="customColorPicker3">
-                            <div class="color-option" style="background-color: #da3633;" data-color="#da3633"></div>
-                            <div class="color-option" style="background-color: #238636;" data-color="#238636"></div>
-                            <div class="color-option" style="background-color: #1f6feb;" data-color="#1f6feb"></div>
-                            <div class="color-option" style="background-color: #fb8500;" data-color="#fb8500"></div>
-                            <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
-                            <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
-                            <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
-                            <div class="color-option" style="background-color: #84cc16;" data-color="#84cc16"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="player player3" id="player3">
-                    <div class="arrow-indicator"><i class="fa fa-cog"></i></div>
-                    <div class="command-damage disabled damage-3">▶️ Click to Exit</div>
-                    <div class="life-total" id="life3">40</div>
-                    <div class="skull" id="skull3"><i class="fas fa-skull"></i></div>
-                    <div class="poison-indicator" id="poison-indicator-3">0 <i class="fas fa-skull"></i></div>
-                    <div class="half top-half basic-commander" onclick="tapLife(3, 1, this)">
-                        <div class="plus">+</div>
-                        <div class="tap-counter" id="tapCounter3Plus">+1</div>
-                    </div>
-                    <div class="half bottom-half basic-commander" onclick="tapLife(3, -1, this)">
-                        <div class="minus">-</div>
-                        <div class="tap-counter" id="tapCounter3Minus">-1</div>
-                    </div>
-
-                    <div class="commander-damage-container" id="commander-damage-container3">
-                        <div>
-                            <div class="commander-damage-box damage-0 enemy-partner-0" onclick="adjustCommanderDamage(3)">0</div>
-                            <div class="commander-damage-box damage-0 partner enemy-partner-1" onclick="adjustCommanderDamage(3)"
-                                style="display: none;">0</div>
-                        </div>
-                        <div>
-                            <div class="commander-damage-box damage-1 enemy-partner-0" onclick="adjustCommanderDamage(3)">0</div>
-                            <div class="commander-damage-box damage-1 partner enemy-partner-1" onclick="adjustCommanderDamage(3)"
-                                style="display: none;">0</div>
-                        </div>
-                        <div>
-                            <div class="commander-damage-box damage-2 enemy-partner-0" onclick="adjustCommanderDamage(3)">0</div>
-                            <div class="commander-damage-box damage-2 partner enemy-partner-1" onclick="adjustCommanderDamage(3)"
-                                style="display: none;">0</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Central Long-Press Menu Button -->
+            <!-- Player containers injected by buildBoard() in lifetracker.js -->
+                        <!-- Central Long-Press Menu Button -->
             <div id="centralMenuButton" class="central-menu-button">Hold Menu</div>
             <!-- Overlay Menu -->
             <div id="centralMenuOverlay" class="central-menu-overlay" onclick="closeCentralMenu()">
                 <div class="central-menu" onclick="event.stopPropagation();">
                     <div class="central-menu-title">Game Menu</div>
+                    <div class="central-menu-item" onclick="newGame()">New Game / Change Layout</div>
                     <div class="central-menu-item" onclick="decideStartingPlayer()">Decide Starting Player</div>
                     <div class="central-menu-item" onclick="closeCentralMenu()">Close</div>
                     <a href='https://ko-fi.com/M4M31KYZ9Y' target='_blank'><img height='10' style='border:0px;height:26px;align-self: center;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy me a coffee' /></a>
                 </div>
             </div>
             <div id="startingPlayerAnnouncement" class="starting-player-announcement"></div>
+        </div>
+
+        <!-- Setup Screen -->
+        <div id="setupOverlay" class="setup-overlay" style="display:none;">
+            <div class="setup-dialog">
+                <div class="setup-title">Paper Weight Commander Life Tracker</div>
+                <div class="setup-section-label">Players</div>
+                <div class="setup-count-btns">
+                    <div class="setup-count-btn" id="setupCountBtn3" onclick="selectPlayerCount(3)">3</div>
+                    <div class="setup-count-btn setup-btn-active" id="setupCountBtn4" onclick="selectPlayerCount(4)">4</div>
+                    <div class="setup-count-btn" id="setupCountBtn5" onclick="selectPlayerCount(5)">5</div>
+                    <div class="setup-count-btn" id="setupCountBtn6" onclick="selectPlayerCount(6)">6</div>
+                </div>
+                <div class="setup-section-label">Layout</div>
+                <div class="setup-layout-btns" id="setupLayoutBtns"></div>
+                <div class="setup-start-btn" onclick="startGame()">Start Game</div>
+            </div>
         </div>
 
     </body>
