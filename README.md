@@ -31,7 +31,7 @@ PaperWeight is a single HTML file + one JS file. No app store, no install, no in
 No build step, no dependencies.
 
 ```
-git clone https://github.com/your-username/PaperWeightCommanderLifeTracker.git
+git clone https://github.com/Brenttime/PaperWeightCommanderLifeTracker.git
 ```
 
 Open `index.html` in any browser. That's it.
