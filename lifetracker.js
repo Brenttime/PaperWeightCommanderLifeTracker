@@ -1,3 +1,7 @@
+        // --- Feature toggles ---
+        var SHOW_KOFI = true;  // Set true to show Ko-fi badge in Game Menu
+        // ------------------------
+
         var numberOfPlayers;
         var playerLives, commanderDamages, partnerCommanderDamages;
         var playersDead, poisonCounters, partnerMode;
@@ -696,6 +700,11 @@
             } else {
                 buildBoard(4, '4-A');
                 openSetupScreen();
+            }
+            // Show Ko-fi badge if enabled
+            if (SHOW_KOFI) {
+                var kofiEl = document.getElementById('kofiContainer');
+                if (kofiEl) kofiEl.style.display = '';
             }
         };
 
